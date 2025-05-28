@@ -18,8 +18,9 @@
 
 ```json
 {
-  "nickname": "ahyoung",
-  "email": "test@example.com"
+  "email": "test@example.com",
+  "image": "https://example.com/new-image.jpg",
+  "nickname": "ahyoung"
 }
 ```
 
@@ -41,6 +42,7 @@
 
 ```json
 {
+  "image": "https://example.com/new-image.jpg",
   "nickname": "newnickname"
 }
 ```
@@ -49,7 +51,8 @@
 
 ```json
 {
-	"email":"ahyoung@example.com",
+  "image": "https://example.com/new-image.jpg",
+  "email":"ahyoung@example.com",
   "nickname": "newnickname"
 }
 ```
@@ -102,11 +105,11 @@
 
 ## 4. 회원 탈퇴
 
-- **METHOD**: `DELETE`
-- **URL**: `/api/member/me`
+- **METHOD**: `PATCH`
+- **URL**: `/api/member/status`
 - **설명**: 현재 로그인한 사용자의 계정을 탈퇴 처리합니다.
 - **요구사항**
-    - 탈퇴 처리 시 비밀번호를 확인한 후 일치할 때 탈퇴 처리
+    - 탈퇴 처리 시 비밀번호를 확인한 후 일치할 때 탈퇴 처리 (soft delete)
     - 탈퇴한 사용자의 아이디는 재사용 불가, 복구 불가
     - 사용자 아이디와 비밀번호가 일치하지 않는 경우, 이미 탈퇴한 사용자 아이디인 경우 예외처리
 
@@ -142,6 +145,7 @@
 
 ```json
 {
+  "image": "https://example.com/image.jpg",
   "nickname": "ahyoung"
 }
 ```
