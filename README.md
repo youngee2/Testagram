@@ -57,7 +57,8 @@
 ## GET
 ###  /api/post
 <br/>
-### 예시 URL  
+
+###  예시 URL  
 
 ```
 https://localhost:8080/api/post
@@ -142,8 +143,9 @@ https://localhost:8080/api/post
 ## GET
 ###  /api/post/{postid}
 
-<br/>
-### 예시 URL  
+<br/>  
+
+###  예시 URL  
 
 ```
 https://localhost:8080/api/post/23532
