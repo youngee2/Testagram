@@ -106,7 +106,7 @@
 ## 4. 회원 탈퇴
 
 - **METHOD**: `PATCH`
-- **URL**: `/api/member/status`
+- **URL**: `/api/member/me/status`
 - **설명**: 현재 로그인한 사용자의 계정을 탈퇴 처리합니다.
 - **요구사항**
     - 탈퇴 처리 시 비밀번호를 확인한 후 일치할 때 탈퇴 처리 (soft delete)
