@@ -56,7 +56,12 @@
 # 2. 게시물 전체조회
 ## GET
 ###  /api/post
+<br/>
+### 예시 URL  
 
+```
+https://localhost:8080/api/post
+```
 
 ###  요청 Request
 
@@ -137,6 +142,13 @@
 ## GET
 ###  /api/post/{postid}
 
+<br/>
+### 예시 URL  
+
+```
+https://localhost:8080/api/post/23532
+```
+
 
 ###  요청 Request
 Param 
@@ -158,7 +170,7 @@ Param
 |---------|---------------|------|
 | status  | int           | 상태코드 |
 | message | String        | 메세지  |
-| nickName | String        | 닉네임  |  
+| nickname | String        | 닉네임  |  
 | content | String        | 내용   |  
 | createdAt | Localdatetime | 생성일시 |  
 | updatedAt | Localdatetime | 수정일시 |  
