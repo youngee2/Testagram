@@ -5,8 +5,8 @@ CREATE TABLE `Member`
     `image`     varchar(255),
     `password`  varchar(255),
     `nickname`  varchar(255),
-    `createdAt` datetime,
-    `updateAt`  datetime,
+    `created_at` datetime,
+    `update_at`  datetime,
     `active`    boolean
 );
 
@@ -15,8 +15,8 @@ CREATE TABLE `Post`
     `id`        bigint PRIMARY KEY AUTO_INCREMENT,
     `writer_id` bigint NOT NULL,
     `content`   text,
-    `createdAt` datetime,
-    `updatedAt` datetime
+    `created_at` datetime,
+    `updated_at` datetime
 );
 
 CREATE TABLE `Comment`
@@ -25,8 +25,8 @@ CREATE TABLE `Comment`
     `post_id`   bigint NOT NULL,
     `writer_id` bigint NOT NULL,
     `content`   text,
-    `createdAt` datetime,
-    `updatedAt` datetime
+    `created_at` datetime,
+    `updated_at` datetime
 );
 
 CREATE TABLE `PostLike`
@@ -34,7 +34,7 @@ CREATE TABLE `PostLike`
     `id`        bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id` bigint NOT NULL,
     `post_id`   bigint NOT NULL,
-    `likedAt`   datetime
+    `liked_at`   datetime
 );
 
 CREATE TABLE `CommentLike`
@@ -42,7 +42,7 @@ CREATE TABLE `CommentLike`
     `id`         bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id`  bigint NOT NULL,
     `comment_id` bigint NOT NULL,
-    `likedAt`    datetime
+    `liked_at`    datetime
 );
 
 CREATE TABLE `Follow`
@@ -50,7 +50,7 @@ CREATE TABLE `Follow`
     `id`           bigint PRIMARY KEY AUTO_INCREMENT,
     `follower_id`  bigint NOT NULL,
     `following_id` bigint NOT NULL,
-    `followedAt`   datetime
+    `followed_at`   datetime
 );
 
 ALTER TABLE `Post`
