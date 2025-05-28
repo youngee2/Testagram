@@ -1,6 +1,7 @@
 package com.newsfeed.testagram.service;
 
 import com.newsfeed.testagram.dto.follow.FollowResponseDto;
+import com.newsfeed.testagram.dto.follow.FollowingMemberResponseDto;
 import com.newsfeed.testagram.entity.Follow;
 import com.newsfeed.testagram.entity.Member;
 import com.newsfeed.testagram.repository.FollowRepository;
@@ -12,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -39,4 +44,22 @@ public class FollowService {
 
         return new FollowResponseDto(loginMemberId, targetMemberId, following.getEmail());
     }
+
+    @Transactional
+    public List<FollowingMemberResponseDto> findFollowingMembers(Long loginMemberId) {
+
+        List<Follow> followList = followRepository.findFollowByFollowerIdOrElseThrow(loginMemberId);
+
+        List<FollowingMemberResponseDto> result = new ArrayList<>();
+
+        for (Follow follow : followList) {
+            Long followingMemberId = follow.getFollowingId();
+            Member member = memberRepository.findMemberByIdOrElseThrow(followingMemberId);
+
+            result.add(FollowingMemberResponseDto.toFollowingMemberResponseDto(member));
+        }
+
+        return result;
+    }
+
 }

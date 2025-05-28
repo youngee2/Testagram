@@ -2,10 +2,14 @@ package com.newsfeed.testagram.controller;
 
 import com.newsfeed.testagram.dto.follow.FollowRequestDTO;
 import com.newsfeed.testagram.dto.follow.FollowResponseDto;
+import com.newsfeed.testagram.dto.follow.FollowingMemberResponseDto;
 import com.newsfeed.testagram.service.FollowService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -13,20 +17,40 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class FollowController {
 
-    // 생성자를 통한 followService 의존성 주입
     private final FollowService followService;
-    
-    // 팔로우 API
+
+    /**
+     * 팔로우 API
+     * @param followRequestDto
+     * @Param userDetails - 로그인한 사용자 정보
+     * @return ResponseEntity.ok(followResponseDto) - 팔로우 정보(팔로우 고유 식별자, 팔로우한 멤버 id, 팔로우 당한 멤버 id, 팔로우 당한 멤버 email), 상태코드 200
+    **/
     @PostMapping
     public ResponseEntity<FollowResponseDto> follow(
             @RequestBody FollowRequestDTO followRequestDto
             //, @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        //Long loginUserId = userDetails.getUserId(); // JWT에서 가져온 자신의 ID
-        Long loginMemberId = (long) 1; // 테스트용
-        Long targetMemberId = followRequestDto.getTargetMemberId(); // 팔로우 대상 맴버 ID
+        //Long loginMemberId = userDetails.getMemberId();
+        Long loginMemberId = (long) 1;
+        Long targetMemberId = followRequestDto.getTargetMemberId();
 
-        FollowResponseDto followResponseDto = followService.followMember(loginMemberId, targetMemberId); // 자신의 ID + 팔로우 대상 ID로 팔로우 비즈니스 로직 실행
-        return ResponseEntity.ok(followResponseDto); // 팔로우 완료 후 팔로우에 대한 정보 리턴
+        FollowResponseDto followResponseDto = followService.followMember(loginMemberId, targetMemberId);
+        return ResponseEntity.ok(followResponseDto);
+    }
+
+    /**
+     * 로그인한 멤버가 팔로우한 목록 조회 API
+     * @Param userDetails - 로그인한 사용자 정보
+     * @return ResponseEntity.ok(FollowingMemberResponseDtoList) - 팔로우한 멤버의 정보(id, nickname, email) 리스트, 상태코드 200
+     **/
+    @GetMapping
+    public ResponseEntity<List<FollowingMemberResponseDto>> findFollowingMember(
+            // @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        //Long loginMemberId = userDetails.getMemberId();
+        Long loginMemberId = (long) 1;
+        List<FollowingMemberResponseDto> FollowingMemberResponseDtoList = followService.findFollowingMembers(loginMemberId);
+
+        return ResponseEntity.ok(FollowingMemberResponseDtoList);
     }
 }
