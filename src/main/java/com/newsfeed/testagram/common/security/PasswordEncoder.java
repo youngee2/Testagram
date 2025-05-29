@@ -1,4 +1,4 @@
-package com.newsfeed.testagram.common.config;
+package com.newsfeed.testagram.common.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
