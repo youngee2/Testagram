@@ -8,12 +8,12 @@ public class FollowingMemberResponseDto {
 
     private Long followingMemberId;
     private String followingMemberNickname;
-    private String followingMemeberEmail;
+    private String followingMemberEmail;
 
-    public FollowingMemberResponseDto(Long followingMemberId, String followingMemberNickname, String followingMemeberEmail) {
+    public FollowingMemberResponseDto(Long followingMemberId, String followingMemberNickname, String followingMemberEmail) {
         this.followingMemberId = followingMemberId;
         this.followingMemberNickname = followingMemberNickname;
-        this.followingMemeberEmail = followingMemeberEmail;
+        this.followingMemberEmail = followingMemberEmail;
     }
 
     public static FollowingMemberResponseDto toFollowingMemberResponseDto(Member member) {

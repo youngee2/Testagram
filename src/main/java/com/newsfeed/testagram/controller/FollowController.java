@@ -2,6 +2,7 @@ package com.newsfeed.testagram.controller;
 
 import com.newsfeed.testagram.dto.follow.FollowRequestDTO;
 import com.newsfeed.testagram.dto.follow.FollowResponseDto;
+import com.newsfeed.testagram.dto.follow.FollowerMemberResponseDto;
 import com.newsfeed.testagram.dto.follow.FollowingMemberResponseDto;
 import com.newsfeed.testagram.service.FollowService;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,7 @@ public class FollowController {
      * @Param userDetails - 로그인한 사용자 정보
      * @return ResponseEntity.ok(FollowingMemberResponseDtoList) - 팔로우한 멤버의 정보(id, nickname, email) 리스트, 상태코드 200
      **/
-    @GetMapping
+    @GetMapping("/followings")
     public ResponseEntity<List<FollowingMemberResponseDto>> findFollowingMember(
             // @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -52,5 +53,16 @@ public class FollowController {
         List<FollowingMemberResponseDto> FollowingMemberResponseDtoList = followService.findFollowingMembers(loginMemberId);
 
         return ResponseEntity.ok(FollowingMemberResponseDtoList);
+    }
+
+    @GetMapping("/followers")
+    public ResponseEntity<List<FollowerMemberResponseDto>> findFollowerMember(
+            // @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        //Long loginMemberId = userDetails.getMemberId();
+        Long loginMemberId = (long) 2;
+        List<FollowerMemberResponseDto> followerMemberResponseDtoList = followService.findFollowerMembers(loginMemberId);
+
+        return ResponseEntity.ok(followerMemberResponseDtoList);
     }
 }

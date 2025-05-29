@@ -1,6 +1,7 @@
 package com.newsfeed.testagram.service;
 
 import com.newsfeed.testagram.dto.follow.FollowResponseDto;
+import com.newsfeed.testagram.dto.follow.FollowerMemberResponseDto;
 import com.newsfeed.testagram.dto.follow.FollowingMemberResponseDto;
 import com.newsfeed.testagram.entity.Follow;
 import com.newsfeed.testagram.entity.Member;
@@ -50,16 +51,32 @@ public class FollowService {
 
         List<Follow> followList = followRepository.findFollowByFollowerIdOrElseThrow(loginMemberId);
 
-        List<FollowingMemberResponseDto> result = new ArrayList<>();
+        List<FollowingMemberResponseDto> followingMemberResponseDtoList = new ArrayList<>();
 
         for (Follow follow : followList) {
             Long followingMemberId = follow.getFollowingId();
             Member member = memberRepository.findMemberByIdOrElseThrow(followingMemberId);
 
-            result.add(FollowingMemberResponseDto.toFollowingMemberResponseDto(member));
+            followingMemberResponseDtoList.add(FollowingMemberResponseDto.toFollowingMemberResponseDto(member));
         }
 
-        return result;
+        return followingMemberResponseDtoList;
     }
 
+    @Transactional
+    public List<FollowerMemberResponseDto> findFollowerMembers(Long loginMemberId) {
+
+        List<Follow> followList = followRepository.findFollowByFollowingIdOrElseThrow(loginMemberId);
+
+        List<FollowerMemberResponseDto> followerMemberResponseDtoList = new ArrayList<>();
+
+        for (Follow follow : followList) {
+            Long followerMemberId = follow.getFollowerId();
+            Member member = memberRepository.findMemberByIdOrElseThrow(followerMemberId);
+
+            followerMemberResponseDtoList.add(FollowerMemberResponseDto.toFollowerMemberResponseDto(member));
+        }
+
+        return followerMemberResponseDtoList;
+    }
 }

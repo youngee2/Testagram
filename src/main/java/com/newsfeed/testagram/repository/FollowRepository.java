@@ -17,10 +17,20 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     List<Follow> findFollowByFollowerId(Long loginMemberId);
 
     default List<Follow> findFollowByFollowerIdOrElseThrow(Long loginMemberId) {
-        List<Follow> result = findFollowByFollowerId(loginMemberId);
-        if (result.isEmpty()) {
+        List<Follow> followList = findFollowByFollowerId(loginMemberId);
+        if (followList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로우한 멤버가 없습니다. id = " + loginMemberId);
         }
-        return result;
+        return followList;
+    }
+
+    List<Follow> findFollowByFollowingId(Long loginMemberId);
+
+    default List<Follow> findFollowByFollowingIdOrElseThrow(Long loginMemberId) {
+        List<Follow> followList = findFollowByFollowingId(loginMemberId);
+        if (followList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로잉한 멤버가 없습니다. id = " + loginMemberId);
+        }
+        return followList;
     }
 }
