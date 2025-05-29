@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CreatePostRequestDto {
 
-    private final String content;
+    private String content;
 
     public CreatePostRequestDto(String content) {
         this.content = content;
