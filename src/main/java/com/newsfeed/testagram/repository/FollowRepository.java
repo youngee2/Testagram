@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
@@ -32,5 +33,13 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로잉한 멤버가 없습니다. id = " + loginMemberId);
         }
         return followList;
+    }
+
+    Optional<Follow> findFollowByFollowerIdAndFollowingId(Long followerId, Long followingId);
+
+    default Follow findFollowByFollowerIdAndFollowingIdOrElseThrow(Long followerId, Long followingId) {
+        return findFollowByFollowerIdAndFollowingId(followerId, followingId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로우 관계가 존재하지 않습니다. followerId=" + followerId + ", followingId=" + followingId));
     }
 }

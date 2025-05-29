@@ -65,4 +65,19 @@ public class FollowController {
 
         return ResponseEntity.ok(followerMemberResponseDtoList);
     }
+
+    @DeleteMapping("/{targetMemberId}")
+    public ResponseEntity<Void> deleteFollowMember(
+            // @AuthenticationPrincipal CustomUserDetails userDetails
+            @PathVariable Long targetMemberId
+    ) {
+        //Long loginMemberId = userDetails.getMemberId();
+        Long loginMemberId = (long) 1;
+
+        followService.delete(loginMemberId, targetMemberId);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 }

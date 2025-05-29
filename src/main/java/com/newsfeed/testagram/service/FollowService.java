@@ -79,4 +79,11 @@ public class FollowService {
 
         return followerMemberResponseDtoList;
     }
+
+    @Transactional
+    public void delete(Long loginMemberId, Long targetMemberId) {
+        Follow findFollow = followRepository.findFollowByFollowerIdAndFollowingIdOrElseThrow(loginMemberId, targetMemberId);
+        followRepository.delete(findFollow);
+    }
+
 }
