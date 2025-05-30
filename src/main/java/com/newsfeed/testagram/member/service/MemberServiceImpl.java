@@ -3,10 +3,13 @@ import com.newsfeed.testagram.common.exception.member.MemberNotMatchedException;
 import com.newsfeed.testagram.common.exception.member.EmailAlreadyExistsException;
 import com.newsfeed.testagram.common.exception.member.MemberNotFoundException;
 import com.newsfeed.testagram.common.security.PasswordEncoder;
+import com.newsfeed.testagram.member.dto.request.MyProfileUpdateRequestDto;
 import com.newsfeed.testagram.member.dto.response.MemberResponseDto;
 import com.newsfeed.testagram.member.dto.response.MyProfileResponseDto;
+import com.newsfeed.testagram.member.dto.response.MyProfileUpdateResponseDto;
 import com.newsfeed.testagram.member.entity.Member;
 import com.newsfeed.testagram.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +55,16 @@ public class MemberServiceImpl implements MemberService{
         Member member = memberRepository.findById(id)
                 .orElseThrow(MemberNotMatchedException::new);
         return MyProfileResponseDto.of(member);
+    }
+
+    @Transactional
+    @Override
+    public MyProfileUpdateResponseDto editMyProfileById(Long id, MyProfileUpdateRequestDto dto) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(MemberNotMatchedException::new);
+
+        member.updateProfile(dto.getNickname(), dto.getImage());
+        return MyProfileUpdateResponseDto.of(member);
     }
 
 

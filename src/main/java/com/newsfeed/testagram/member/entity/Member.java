@@ -48,6 +48,11 @@ public class Member {
         this.nickname = nickname;
     }
 
+    public void updateProfile(String nickname, String image) {
+        if (nickname != null) this.nickname = nickname;
+        if (image != null) this.image = image;
+    }
+
 }
 
 
