@@ -1,14 +1,13 @@
 package com.newsfeed.testagram.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Getter
 @Entity
 @Table(name = "Post")
+@Builder
 public class Post extends BaseEntity {
 
     @Id

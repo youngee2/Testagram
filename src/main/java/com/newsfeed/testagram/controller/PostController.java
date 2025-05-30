@@ -29,7 +29,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<CreatePostResponseDto> save(@RequestBody CreatePostRequestDto requestDto) {
         // System.out.println("---연결확인--");
-        CreatePostResponseDto createPostResponseDto = postService.save(requestDto.getContent());
+        CreatePostResponseDto createPostResponseDto = postService.save(requestDto);
         return ResponseEntity.ok(createPostResponseDto);
     }
 
@@ -44,6 +44,9 @@ public class PostController {
         PostListResponseDto posts = postService.getPosts(pageable);
         return ResponseEntity.ok(posts);
     }
+
+    // 게시물 단건 조회
+
     //게시물 수정 API
 
 

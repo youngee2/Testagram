@@ -1,11 +1,13 @@
 package com.newsfeed.testagram.service;
 
+import com.newsfeed.testagram.dto.CreatePostRequestDto;
 import com.newsfeed.testagram.dto.CreatePostResponseDto;
 import com.newsfeed.testagram.dto.PostContentDto;
 import com.newsfeed.testagram.dto.PostListResponseDto;
 import com.newsfeed.testagram.entity.Post;
 import com.newsfeed.testagram.entity.User;
 import com.newsfeed.testagram.repository.PostRepository;
+import com.newsfeed.testagram.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,10 +26,16 @@ public class PostService {
 
     //    private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public CreatePostResponseDto save(String content) {
+    public CreatePostResponseDto save(CreatePostRequestDto requestDto) {
+        User user = userRepository.findById(requestDto.getWriterId())
+                .orElseThrow(() -> new IllegalArgumentException("헤당유저가 존재하지 않습니다."));
         // Post 객체 생성
-        Post post = new Post(content);
+        Post post = Post.builder()
+                .writer(user)
+                .content(requestDto.getContent())
+                .build();
         //System.out.println("---Post저장---" );
 
         // DB에 저장
