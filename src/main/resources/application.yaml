@@ -21,3 +21,9 @@ spring:
 server:
   error:
     include-message: always
+
+jwt:
+  secret:
+    key: Thecurrenttimeis922AMonMay30th2025mynameisGunhoJangToissueatokenusingJWTAsecretkeyisrequired
+
+##
