@@ -5,15 +5,17 @@
 
 ###  요청 Request
 
-| 키   | 데이터 타입 | 설명  |
-|-----|--------|-----|
-| content | String | 내용  |
+| 키        | 데이터 타입 | 설명  |
+|----------|--------|-----|
+| writerid | long   | 내용  |
+| content  | String | 내용  |
 
   
 
 ### JSON 예시
 ``` Json  
 {
+    "writerId" : 1,
     "content" : "내용"
  }   
 ```  
