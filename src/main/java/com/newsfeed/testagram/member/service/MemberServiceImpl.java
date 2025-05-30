@@ -1,9 +1,9 @@
 package com.newsfeed.testagram.member.service;
-import com.newsfeed.testagram.common.exception.member.MemberNotMatchedException;
-import com.newsfeed.testagram.common.exception.member.EmailAlreadyExistsException;
-import com.newsfeed.testagram.common.exception.member.MemberNotFoundException;
+import com.newsfeed.testagram.common.exception.member.*;
 import com.newsfeed.testagram.common.security.PasswordEncoder;
+import com.newsfeed.testagram.common.valid.PasswordValid;
 import com.newsfeed.testagram.member.dto.request.MyProfileUpdateRequestDto;
+import com.newsfeed.testagram.member.dto.request.PasswordRequestDto;
 import com.newsfeed.testagram.member.dto.response.MemberResponseDto;
 import com.newsfeed.testagram.member.dto.response.MyProfileResponseDto;
 import com.newsfeed.testagram.member.dto.response.MyProfileUpdateResponseDto;
@@ -21,9 +21,10 @@ import com.newsfeed.testagram.domain.member.dto.MemberSignUpResponse;
  */
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
     /**
      * @param id 조회할 회원의 id
      * @return 조회된 회원 정보를 담은 MemberResponseDto
@@ -39,7 +40,7 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
-    public MemberSignUpResponse signup(String email, String password, String nickname){
+    public MemberSignUpResponse signup(String email, String password, String nickname) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
@@ -67,5 +68,34 @@ public class MemberServiceImpl implements MemberService{
         return MyProfileUpdateResponseDto.of(member);
     }
 
+    @Transactional
+    @Override
+    public void editPasswordById(Long id, PasswordRequestDto dto) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(MemberNotMatchedException::new);
 
+        boolean check=passwordCheck(dto.getCurrentPassword(), member.getPassword(),dto.getNewPassword());
+
+        if(check){
+            member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
+        }
+    }
+
+
+    public boolean passwordCheck(String currentPassword, String password, String newPassword) {
+        // 현재 비밀번호 불일치
+        if (!passwordEncoder.matches(currentPassword,password)) {
+            throw new PasswordNotMatchedException();
+        }
+
+        // 현재 비밀번호와 새 비밀번호가 동일한 경우
+        if (passwordEncoder.matches(newPassword, password)) {
+            throw new SamePasswordException();
+        }
+        // 새 비밀번호가 형식에 안맞는 경우
+        if (PasswordValid.passwordRegex.matches(newPassword)) {
+            throw new InvalidPasswordFormatException();
+        }
+    return true;
+    }
 }

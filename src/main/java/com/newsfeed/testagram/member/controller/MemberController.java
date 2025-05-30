@@ -4,6 +4,7 @@ package com.newsfeed.testagram.member.controller;
 
 import com.newsfeed.testagram.common.security.UserDetailsImpl;
 import com.newsfeed.testagram.member.dto.request.MemberSignUpRequest;
+import com.newsfeed.testagram.member.dto.request.PasswordRequestDto;
 import com.newsfeed.testagram.member.dto.response.MemberResponseDto;
 import com.newsfeed.testagram.member.dto.response.MyProfileResponseDto;
 import com.newsfeed.testagram.member.dto.request.MyProfileUpdateRequestDto;
@@ -49,6 +50,14 @@ public class MemberController {
         Long id = userDetails.getId();
         MyProfileUpdateResponseDto responseDto = memberService.editMyProfileById(id,requestDto);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @PatchMapping("/me/password")
+    public ResponseEntity<Void> editPassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                    @RequestBody PasswordRequestDto requestDto){
+        Long id = userDetails.getId();
+        memberService.editPasswordById(id,requestDto);
+        return ResponseEntity.ok().build();
     }
     @PostMapping("/register")
     public ResponseEntity<?> save(@Valid @RequestBody MemberSignUpRequest request) {

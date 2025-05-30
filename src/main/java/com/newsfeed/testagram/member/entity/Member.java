@@ -53,6 +53,9 @@ public class Member {
         if (image != null) this.image = image;
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
 
 
