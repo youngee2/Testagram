@@ -1,12 +1,12 @@
 package com.newsfeed.testagram.controller;
 
-import com.newsfeed.testagram.dto.follow.FollowRequestDTO;
-import com.newsfeed.testagram.dto.follow.FollowResponseDto;
-import com.newsfeed.testagram.dto.follow.FollowerMemberResponseDto;
-import com.newsfeed.testagram.dto.follow.FollowingMemberResponseDto;
+import com.newsfeed.testagram.dto.follow.*;
 import com.newsfeed.testagram.service.FollowService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +68,7 @@ public class FollowController {
 
     @DeleteMapping("/{targetMemberId}")
     public ResponseEntity<Void> deleteFollowMember(
-            // @AuthenticationPrincipal CustomUserDetails userDetails
+            // @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long targetMemberId
     ) {
         //Long loginMemberId = userDetails.getMemberId();
@@ -79,5 +79,17 @@ public class FollowController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/followings/posts")
+    public ResponseEntity<Page<FollowingMemberPostResponseDto>> findFollowingMemberPost(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            // @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        //Long loginMemberId = userDetails.getMemberId();
+        Long loginMemberId = (long) 1;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
+        Page<FollowingMemberPostResponseDto> followingMemberPostResponseDtoPage = followService.findFollowingMemberPosts(loginMemberId, pageable);
 
+        return ResponseEntity.ok(followingMemberPostResponseDtoPage);
+    }
 }

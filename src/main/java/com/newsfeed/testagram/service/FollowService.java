@@ -2,12 +2,18 @@ package com.newsfeed.testagram.service;
 
 import com.newsfeed.testagram.dto.follow.FollowResponseDto;
 import com.newsfeed.testagram.dto.follow.FollowerMemberResponseDto;
+import com.newsfeed.testagram.dto.follow.FollowingMemberPostResponseDto;
 import com.newsfeed.testagram.dto.follow.FollowingMemberResponseDto;
 import com.newsfeed.testagram.entity.Follow;
 import com.newsfeed.testagram.entity.Member;
+import com.newsfeed.testagram.entity.Post;
 import com.newsfeed.testagram.repository.FollowRepository;
 import com.newsfeed.testagram.repository.MemberRepository;
+import com.newsfeed.testagram.repository.PostRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +29,7 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public FollowResponseDto followMember(Long loginMemberId, Long targetMemberId) {
@@ -43,7 +48,7 @@ public class FollowService {
         Follow follow = new Follow(loginMemberId, targetMemberId, LocalDateTime.now());
         followRepository.save(follow);
 
-        return new FollowResponseDto(loginMemberId, targetMemberId, following.getEmail());
+        return new FollowResponseDto(loginMemberId, targetMemberId, following.getNickname(), following.getEmail());
     }
 
     @Transactional
@@ -86,4 +91,24 @@ public class FollowService {
         followRepository.delete(findFollow);
     }
 
+    @Transactional
+    public Page<FollowingMemberPostResponseDto> findFollowingMemberPosts(Long loginMemberId, Pageable pageable) {
+        List<Follow> followList = followRepository.findFollowByFollowerIdOrElseThrow(loginMemberId);
+
+        List<Long> followingIdList = new ArrayList<>();
+        for (Follow follow : followList) {
+            followingIdList.add(follow.getFollowingId());
+        }
+
+        Page<Post> postPage = postRepository.findFollowByWriterIdIn(followingIdList, pageable);
+
+        List<FollowingMemberPostResponseDto> followingMemberPostResponseDtoList = new ArrayList<>();
+        for (Post post : postPage.getContent()) {
+            Member writer = memberRepository.findMemberByIdOrElseThrow(post.getWriterId());
+            FollowingMemberPostResponseDto followingMemberPostResponseDto = FollowingMemberPostResponseDto.tofollowingMemberPostResponseDto(post, writer);
+            followingMemberPostResponseDtoList.add(followingMemberPostResponseDto);
+        }
+
+        return new PageImpl<FollowingMemberPostResponseDto>(followingMemberPostResponseDtoList, pageable, postPage.getTotalElements());
+    }
 }
