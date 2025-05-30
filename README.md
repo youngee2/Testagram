@@ -105,7 +105,7 @@
 
 ## 4. 회원 탈퇴
 
-- **METHOD**: `PATCH`
+- **METHOD**: `DELETE`
 - **URL**: `/api/member/status`
 - **설명**: 현재 로그인한 사용자의 계정을 탈퇴 처리합니다.
 - **요구사항**
