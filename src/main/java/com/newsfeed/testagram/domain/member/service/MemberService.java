@@ -1,7 +1,7 @@
 package com.newsfeed.testagram.domain.member.service;
 
-import com.newsfeed.testagram.common.config.PasswordEncoder;
 import com.newsfeed.testagram.common.exception.member.EmailAlreadyExistsException;
+import com.newsfeed.testagram.common.security.PasswordEncoder;
 import com.newsfeed.testagram.domain.member.dto.MemberSignUpResponse;
 import com.newsfeed.testagram.domain.member.entity.Member;
 import com.newsfeed.testagram.domain.member.repository.MemberRepository;
