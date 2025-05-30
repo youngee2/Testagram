@@ -1,6 +1,7 @@
 package com.newsfeed.testagram.domain.member.controller;
 
 import com.newsfeed.testagram.domain.member.dto.MemberSignUpRequest;
+import com.newsfeed.testagram.domain.member.dto.MemberSignUpResponse;
 import com.newsfeed.testagram.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> save(@Valid @RequestBody MemberSignUpRequest request) {
+    public ResponseEntity<MemberSignUpResponse> save(@Valid @RequestBody MemberSignUpRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(memberService.signup(request.getEmail(),request.getPassword(),request.getMemberName()));
