@@ -2,14 +2,18 @@ package com.newsfeed.testagram.member.controller;
 
 
 
+import com.newsfeed.testagram.common.security.UserDetailsImpl;
+import com.newsfeed.testagram.member.dto.request.MemberSignUpRequest;
 import com.newsfeed.testagram.member.dto.response.MemberResponseDto;
+import com.newsfeed.testagram.member.dto.response.MyProfileResponseDto;
 import com.newsfeed.testagram.member.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +34,22 @@ public class MemberController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<MyProfileResponseDto> getMyProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        Long id = userDetails.getId();
+        MyProfileResponseDto responseDto = memberService.getMyProfileById(id);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> save(@Valid @RequestBody MemberSignUpRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(memberService.signup(request.getEmail(),request.getPassword(),request.getMemberName()));
+    }
 }
+
+
 
 
 

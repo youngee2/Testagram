@@ -1,10 +1,15 @@
 package com.newsfeed.testagram.common.exception;
 
+import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
 import com.newsfeed.testagram.common.exception.file.FileUploadException;
 import com.newsfeed.testagram.common.exception.file.UnsupportedImageFormatException;
+import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
+import com.newsfeed.testagram.common.exception.login.LoginFailedException;
 import com.newsfeed.testagram.common.exception.member.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -71,5 +76,35 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGeneral(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("서버 오류가 발생했습니다: " + e.getMessage());
+    }
+
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(IncorrectPasswordException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(LoginFailedException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(LoginFailedException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(EmailAlreadyExistsException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String message = (fieldError != null) ? fieldError.getDefaultMessage() : "유효성 검사 실패";
+        return ResponseEntity
+                .status(e.getStatusCode().value())
+                .body(new ErrorResponse(e.getStatusCode().value(), message));
     }
 }
