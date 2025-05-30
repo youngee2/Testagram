@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ *로그인한 사용자 정보를 담습니다.
+ */
 @Getter
 public class UserDetailsImpl implements UserDetails {
     private final Long id;
@@ -21,12 +24,12 @@ public class UserDetailsImpl implements UserDetails {
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.nickname = member.getNickname();
-        this.image = member.getImage(); // getter 있는지 확인!
+        this.image = member.getImage();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // null 말고 빈 리스트 반환
+        return Collections.emptyList();
     }
 
     @Override
@@ -39,7 +42,6 @@ public class UserDetailsImpl implements UserDetails {
         return this.password;
     }
 
-    // 필요하면 아래도 override
     @Override
     public boolean isAccountNonExpired() {
         return true;

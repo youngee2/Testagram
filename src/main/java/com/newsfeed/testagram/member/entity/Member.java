@@ -46,12 +46,6 @@ public class Member {
     @Column(nullable = false)
     private Boolean active=true;
 
-    public Member(String email, String password, String nickname) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-    }
-
     public void updateProfile(String nickname, String image) {
         if (nickname != null) this.nickname = nickname;
         if (image != null) this.image = image;

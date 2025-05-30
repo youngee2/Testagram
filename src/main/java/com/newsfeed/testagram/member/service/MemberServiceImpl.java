@@ -14,8 +14,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.newsfeed.testagram.domain.member.dto.MemberSignUpResponse;
-
 /**
  * 회원 서비스 구현 클래스입니다.
  * 회원 관련 비지니스 로직을 처리합니다.
@@ -28,7 +26,7 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * @param id 조회할 회원의 id
-     * @return 조회된 회원 정보를 담은 MemberResponseDto
+     * @return 회원 정보 DTO
      * @throws MemberNotFoundException 해당 ID의 회원이 존재하지 않을 경우 예외 발생합니다.
      */
 
@@ -40,18 +38,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    @Override
-    public MemberSignUpResponse signup(String email, String password, String nickname) {
-        if (memberRepository.findByEmail(email).isPresent()) {
-            throw new EmailAlreadyExistsException();
-        }
-
-        Member member = new Member(email, passwordEncoder.encode(password), nickname);
-
-        memberRepository.save(member);
-        return MemberSignUpResponse.toDto("회원가입이 완료되었습니다.", member);
-    }
-
+    /**
+     *로그인한 사용자의 프로필 정보를 조회합니다.
+     * @param id 로그인한 사용자 ID
+     * @return 프로필 정보 DTO
+     * @throws MemberNotMatchedException 사용자가 존재하지 않는 경우
+     */
     @Override
     public MyProfileResponseDto getMyProfileById(Long id) {
         Member member = memberRepository.findById(id)
@@ -59,6 +51,15 @@ public class MemberServiceImpl implements MemberService {
         return MyProfileResponseDto.of(member);
     }
 
+
+    /**
+     * 로그인한 사용자 프로필을 수정합니다.
+     *
+     * @param id 로그인한 사용자 ID
+     * @param dto 내 프로필 수정 요청 DTO
+     * @return 수정된 프로필 정보 DTO
+     * @throws MemberNotMatchedException 로그인 사용자와 요청 대상 사용자가 일치하지 않을 때 발생
+     */
     @Transactional
     @Override
     public MyProfileUpdateResponseDto editMyProfileById(Long id, MyProfileUpdateRequestDto dto) {
@@ -69,6 +70,16 @@ public class MemberServiceImpl implements MemberService {
         return MyProfileUpdateResponseDto.of(member);
     }
 
+    /**
+     * 로그인한 사용자 비밀번호를 수정합니다.
+     *
+     * @param id 로그인한 사용자 ID
+     * @param dto 내 비밀번호 수정 요청 DTO
+     * @throws MemberNotMatchedException 로그인 사용자와 요청 대상 사용자가 일치하지 않을 때 발생
+     * @throws PasswordNotMatchedException 비밀번호 불일치
+     * @throws SamePasswordException 현재 비밀번호와 새로운 비밀번호가 일치하는 경우
+     * @throws InvalidPasswordFormatException 비밀번호 형식에 맞지 않는 경우
+     */
     @Transactional
     @Override
     public void editPasswordById(Long id, PasswordRequestDto dto) {
@@ -82,6 +93,14 @@ public class MemberServiceImpl implements MemberService {
         member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
     }
 
+
+    /**
+     * 로그인한 사용자 탈퇴 처리합니다.
+     * @param id 로그인한 사용자 ID
+     * @param dto 탈퇴 요청 DTO
+     * @throws MemberNotMatchedException 로그인 사용자와 요청 대상 사용자가 일치하지 않을 때 발생
+     * @throws PasswordNotMatchedException 현재 비밀번호와 불일치
+     */
     @Transactional
     @Override
     public void deleteProfileById(Long id, MyProfileDeleteRequestDto dto) {

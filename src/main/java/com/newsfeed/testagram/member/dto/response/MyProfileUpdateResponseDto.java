@@ -7,6 +7,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+/**
+ * 로그인한 사용자의 수정된 정보 응답 DTO입니다.
+ */
 public class MyProfileUpdateResponseDto {
     private String nickname;
     private String image;

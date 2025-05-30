@@ -3,9 +3,11 @@ package com.newsfeed.testagram.member.dto.response;
 import com.newsfeed.testagram.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
+/**
+ * 로그인한 사용자의 정보를 조회하는 응답 DTO입니다.
+ */
 @Getter
 @AllArgsConstructor
 public class MyProfileResponseDto {
