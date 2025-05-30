@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 여기왔다면 로그인 상태가 아니라는 소리임.
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.setContentType("application/json; charset=UTF-8");
             httpResponse.getWriter().write("{\n  \"error\": \"401\",   \"message\": \"토큰이 유효하지 않습니다.\"\n}");
