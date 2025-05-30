@@ -1,9 +1,6 @@
 package com.newsfeed.testagram.controller;
 
-import com.newsfeed.testagram.dto.CreatePostRequestDto;
-import com.newsfeed.testagram.dto.CreatePostResponseDto;
-import com.newsfeed.testagram.dto.PostListResponseDto;
-import com.newsfeed.testagram.dto.PostUpdateRequestDto;
+import com.newsfeed.testagram.dto.*;
 import com.newsfeed.testagram.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,6 +43,11 @@ public class PostController {
     }
 
     // 게시물 단건 조회
+    @GetMapping("/{postid}")
+    public ResponseEntity<PostDetailResponseDto> getPostAPI(@PathVariable Long postid){
+        PostDetailResponseDto post = postService.findById(postid);
+        return ResponseEntity.ok(post);
+    }
 
     //게시물 수정 API
 

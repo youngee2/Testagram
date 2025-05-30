@@ -1,21 +1,22 @@
 package com.newsfeed.testagram.service;
 
-import com.newsfeed.testagram.dto.CreatePostRequestDto;
-import com.newsfeed.testagram.dto.CreatePostResponseDto;
-import com.newsfeed.testagram.dto.PostContentDto;
-import com.newsfeed.testagram.dto.PostListResponseDto;
+import com.newsfeed.testagram.dto.*;
 import com.newsfeed.testagram.entity.Post;
 import com.newsfeed.testagram.entity.User;
 import com.newsfeed.testagram.repository.PostRepository;
 import com.newsfeed.testagram.repository.UserRepository;
-import jakarta.transaction.Transactional;
+
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class PostService {
         return new CreatePostResponseDto(200, "게시물을 작성하였습니다.");
     }
 
-    //전체 조회기능 반환
+    //전체 조회기능
 
     public PostListResponseDto getPosts(Pageable pageable) {
         Page<Post> postPage = postRepository.findAll(pageable);
@@ -64,7 +65,40 @@ public class PostService {
         });
 
         return PostListResponseDto.successOf(postList);
+    }
+
+    //단건 조회기능
+    @Transactional(readOnly = true)
+    public PostDetailResponseDto findById(Long id){
+        //데이터 조회
+        Optional<Post> findPost = postRepository.findById(id);
+        //responseDto 만들기
+        if(findPost.isPresent()){
+            Post post = findPost.get();
+            User writer = post.getWriter();
+
+            String nickName = (writer != null) ? writer.getNickName() : "탈퇴한 사용자";
+
+            return new PostDetailResponseDto(
+                    200,
+                    "게시물을 조회하였습니다.",
+                    nickName,
+                    post.getContent(),
+                    post.getCreatedAt(),
+                    post.getUpdatedAt()
+            );
+        }
+        // 게시물이 없을 경우 기본 응답 또는 예외 처리
+        return new PostDetailResponseDto(
+                404,
+                "게시물을 찾을 수 없습니다.",
+                "",
+                "",
+                null,
+                null
+        );
 
 
     }
+
 }

@@ -181,8 +181,7 @@ Param
 | 키       | 데이터 타입        | 설명   |
 |---------|---------------|------|
 | status  | int           | 상태코드 |
-| message | String        | 메세지  |
-| nickName | String        | 닉네임  |  
+| message | String        | 메세지  | 
 | content | String        | 내용   |  
 | createdAt | Localdatetime | 생성일시 |  
 | updatedAt | Localdatetime | 수정일시 |  
