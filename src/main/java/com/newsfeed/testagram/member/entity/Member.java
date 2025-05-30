@@ -2,6 +2,8 @@ package com.newsfeed.testagram.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE member SET active = false WHERE id = ?")
+@Where(clause = "active = true")
 @Getter
 @Table(name="member")
 @AllArgsConstructor
@@ -39,8 +43,8 @@ public class Member {
     @Column(name="update_at")
     private LocalDateTime updateAt;
 
-    @Column
-    private Boolean active;
+    @Column(nullable = false)
+    private Boolean active=true;
 
     public Member(String email, String password, String nickname) {
         this.email = email;
@@ -55,6 +59,10 @@ public class Member {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void deleteProfile() {
+        this.active = false;
     }
 }
 

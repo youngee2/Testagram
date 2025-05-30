@@ -4,6 +4,7 @@ package com.newsfeed.testagram.member.controller;
 
 import com.newsfeed.testagram.common.security.UserDetailsImpl;
 import com.newsfeed.testagram.member.dto.request.MemberSignUpRequest;
+import com.newsfeed.testagram.member.dto.request.MyProfileDeleteRequestDto;
 import com.newsfeed.testagram.member.dto.request.PasswordRequestDto;
 import com.newsfeed.testagram.member.dto.response.MemberResponseDto;
 import com.newsfeed.testagram.member.dto.response.MyProfileResponseDto;
@@ -57,6 +58,14 @@ public class MemberController {
                                                                     @RequestBody PasswordRequestDto requestDto){
         Long id = userDetails.getId();
         memberService.editPasswordById(id,requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/status")
+    public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                              @RequestBody MyProfileDeleteRequestDto dto){
+        Long id = userDetails.getId();
+        memberService.deleteProfileById(id,dto);
         return ResponseEntity.ok().build();
     }
     @PostMapping("/register")

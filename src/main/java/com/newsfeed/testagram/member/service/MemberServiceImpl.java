@@ -2,6 +2,7 @@ package com.newsfeed.testagram.member.service;
 import com.newsfeed.testagram.common.exception.member.*;
 import com.newsfeed.testagram.common.security.PasswordEncoder;
 import com.newsfeed.testagram.common.valid.PasswordValid;
+import com.newsfeed.testagram.member.dto.request.MyProfileDeleteRequestDto;
 import com.newsfeed.testagram.member.dto.request.MyProfileUpdateRequestDto;
 import com.newsfeed.testagram.member.dto.request.PasswordRequestDto;
 import com.newsfeed.testagram.member.dto.response.MemberResponseDto;
@@ -74,28 +75,43 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(MemberNotMatchedException::new);
 
-        boolean check=passwordCheck(dto.getCurrentPassword(), member.getPassword(),dto.getNewPassword());
+        validateCurrentPassword(dto.getCurrentPassword(), member.getPassword());
+        validateDifferentFromOldPassword(dto.getNewPassword(), member.getPassword());
+        validatePasswordFormat(dto.getNewPassword());
 
-        if(check){
-            member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
-        }
+        member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
+    }
+
+    @Transactional
+    @Override
+    public void deleteProfileById(Long id, MyProfileDeleteRequestDto dto) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(PasswordNotMatchedException::new);
+
+        validateCurrentPassword(dto.getPassword(), member.getPassword());
+        member.deleteProfile();
     }
 
 
-    public boolean passwordCheck(String currentPassword, String password, String newPassword) {
-        // 현재 비밀번호 불일치
-        if (!passwordEncoder.matches(currentPassword,password)) {
+    // 현재 비밀번호 불일치
+    private void validateCurrentPassword(String currentPassword, String password) {
+        if (!passwordEncoder.matches(currentPassword, password)) {
             throw new PasswordNotMatchedException();
         }
+    }
 
-        // 현재 비밀번호와 새 비밀번호가 동일한 경우
+    // 현재 비밀번호와 새 비밀번호가 동일한 경우
+    private void validateDifferentFromOldPassword(String newPassword, String password) {
         if (passwordEncoder.matches(newPassword, password)) {
             throw new SamePasswordException();
         }
-        // 새 비밀번호가 형식에 안맞는 경우
-        if (PasswordValid.passwordRegex.matches(newPassword)) {
+    }
+
+    // 새 비밀번호가 형식에 안맞는 경우
+    private void validatePasswordFormat(String newPassword) {
+        if (!newPassword.matches(PasswordValid.passwordRegex)) {
             throw new InvalidPasswordFormatException();
         }
-    return true;
     }
+
 }
