@@ -1,16 +1,14 @@
 package com.newsfeed.testagram.domain.login.controller;
 
+import com.newsfeed.testagram.common.util.JwtUtil;
 import com.newsfeed.testagram.domain.login.dto.LoginRequest;
 import com.newsfeed.testagram.domain.login.service.LoginService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import static com.newsfeed.testagram.common.util.JwtUtil.BEARER_PREFIX;
 
 @RestController
 @RequestMapping("/api")
@@ -18,29 +16,19 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     private final LoginService loginService;
-    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return ResponseEntity.
                 status(HttpStatus.OK)
                 .body(loginService.login(request.getEmail(),request.getPassword()));
     }
 
     @GetMapping("/member/me")
-    public ResponseEntity<?> getMyInfo(Authentication authentication) {
-        String username = authentication.getName();
-        return ResponseEntity.ok("내 아이디: " + username);
+    public ResponseEntity<?> getMyInfo(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace(BEARER_PREFIX, "");
+        return ResponseEntity.ok("내 이메일 " + jwtUtil.getEmailFromToken(token));
     }
 
 }
