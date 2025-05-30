@@ -4,6 +4,7 @@ import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
 import com.newsfeed.testagram.common.exception.member.EmailAlreadyExistsException;
+import com.newsfeed.testagram.common.exception.member.EmailNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(EmailAlreadyExistsException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(EmailNotFoundException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
