@@ -32,24 +32,31 @@ public class PostController {
 
     //게시물 전체 조회
     @GetMapping
-    public ResponseEntity<PostListResponseDto> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PostListResponseDto> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
-        Pageable pageable = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         PostListResponseDto posts = postService.getPosts(pageable);
         return ResponseEntity.ok(posts);
     }
 
     // 게시물 단건 조회
-    @GetMapping("/{postid}")
-    public ResponseEntity<PostDetailResponseDto> getPostAPI(@PathVariable Long postid){
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDetailResponseDto> getPostAPI(@PathVariable Long postid) {
         PostDetailResponseDto post = postService.findById(postid);
         return ResponseEntity.ok(post);
     }
 
     //게시물 수정 API
+    @PatchMapping("/{postId}")
+    public ResponseEntity<PostUpdateResponseDto> updatePostAPI(
+            @PathVariable("postId") Long postId,
+            @RequestBody PostUpdateRequestDto requestDto
+    ) {
+        PostUpdateResponseDto responseDto = postService.updatePostService(postId,requestDto);
+        ResponseEntity<PostUpdateResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return response;
 
+    }
 
 }

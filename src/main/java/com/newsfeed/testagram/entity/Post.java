@@ -38,6 +38,9 @@ public class Post extends BaseEntity {
         this.content = content;
         this.writer = writer;
     }
+    public void updatePost(String content){
+        this.content = content;
+    }
 
 
 

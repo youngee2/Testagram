@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,11 +70,11 @@ public class PostService {
 
     //단건 조회기능
     @Transactional(readOnly = true)
-    public PostDetailResponseDto findById(Long id){
+    public PostDetailResponseDto findById(Long id) {
         //데이터 조회
         Optional<Post> findPost = postRepository.findById(id);
         //responseDto 만들기
-        if(findPost.isPresent()){
+        if (findPost.isPresent()) {
             Post post = findPost.get();
             User writer = post.getWriter();
 
@@ -101,4 +102,19 @@ public class PostService {
 
     }
 
+    // 수정 기능
+    public PostUpdateResponseDto updatePostService(Long postId,PostUpdateRequestDto requestDto) {
+        // 데이터 
+        Long getpPostId = requestDto.getPostId();
+        String content = requestDto.getContent();
+        // 조회
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+        // 수정
+        post.updatePost(content);
+        return new PostUpdateResponseDto(200, "수정을 완료하였습니다.");
+    }
+
 }
+
