@@ -20,7 +20,7 @@ public class Post extends BaseEntity {
     //다대일 관계의 writer_id
     @JoinColumn(name = "writer_id")
     @ManyToOne(fetch = FetchType.EAGER)
-    private User writer;
+    private Member writer;
 //    @Column(nullable = false,name = "writer_id")
 //    private Long writerId;
 
@@ -33,7 +33,7 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
-    public Post(Long id, String content, User writer) {
+    public Post(Long id, String content, Member writer) {
         this.id = id;
         this.content = content;
         this.writer = writer;

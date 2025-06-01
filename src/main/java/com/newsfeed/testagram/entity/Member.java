@@ -2,22 +2,19 @@ package com.newsfeed.testagram.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 
 
-public class User {
+public class Member {
     @Id
     private Long id;
 
     private String nickName;
 
-    protected  User (){}
+    protected Member(){}
 
-    public User(Long id, String nickName){
+    public Member(Long id, String nickName){
         this.id = id;
         this.nickName = nickName;
     }

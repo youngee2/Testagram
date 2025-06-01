@@ -2,25 +2,17 @@ package com.newsfeed.testagram.service;
 
 import com.newsfeed.testagram.dto.*;
 import com.newsfeed.testagram.entity.Post;
-import com.newsfeed.testagram.entity.User;
+import com.newsfeed.testagram.entity.Member;
 import com.newsfeed.testagram.repository.PostRepository;
 import com.newsfeed.testagram.repository.UserRepository;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +23,7 @@ public class PostService {
     private final UserRepository userRepository;
 
     public CreatePostResponseDto save(CreatePostRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getWriterId())
+        Member user = userRepository.findById(requestDto.getWriterId())
                 .orElseThrow(() -> new IllegalArgumentException("헤당유저가 존재하지 않습니다."));
         // Post 객체 생성
         Post post = Post.builder()
@@ -54,7 +46,7 @@ public class PostService {
         Page<Post> postPage = postRepository.findAll(pageable);
 
         Page<PostContentDto> postList = postPage.map(post -> {
-            User writer = post.getWriter();
+            Member writer = post.getWriter();
             return new PostContentDto(
                     post.getId(),
                     writer != null ? writer.getId() : -1L,
@@ -76,7 +68,7 @@ public class PostService {
         //responseDto 만들기
         if (findPost.isPresent()) {
             Post post = findPost.get();
-            User writer = post.getWriter();
+            Member writer = post.getWriter();
 
             String nickName = (writer != null) ? writer.getNickName() : "탈퇴한 사용자";
 
@@ -116,5 +108,22 @@ public class PostService {
         return new PostUpdateResponseDto(200, "수정을 완료하였습니다.");
     }
 
+    // 삭제기능
+
+    public PostDeleteResponseDto deletePostService(Long postId) {
+        // 조회
+        Optional<Post> PostOptional = postRepository.findById(postId);
+        if (PostOptional.isPresent()) {
+            Post foundPost = PostOptional.get();
+            postRepository.delete(foundPost);
+            // dto 만들기
+            PostDeleteResponseDto responseDto = new PostDeleteResponseDto(200, "deleted");
+            // dto 반환
+            return responseDto;
+        } else {
+            // 실패 용 응답 만들어서 반환
+            return null;
+        }
+    }
 }
 
