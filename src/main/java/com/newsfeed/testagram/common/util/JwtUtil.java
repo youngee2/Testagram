@@ -54,7 +54,7 @@ public class JwtUtil {
         return parseToken(token).getSubject();
     }
 
-    public Long getMemberIdFormToken(String token){
+    public Long getMemberIdFromToken(String token){
         return parseToken(token).get("memberId", Long.class);
     }
 

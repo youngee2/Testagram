@@ -101,14 +101,7 @@ public class GlobalExceptionHandler {
     }
 
     // 유효성 검사 실패 처리 (예: @Valid)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
+
 
     // 기타 예외 처리 예시
     @ExceptionHandler(Exception.class)

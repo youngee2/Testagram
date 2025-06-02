@@ -49,7 +49,7 @@ public class MemberService {
      * @throws MemberNotMatchedException 사용자가 존재하지 않는 경우
      */
     public MyProfileResponseDto getMemberById(String authHead) {
-        long id = jwtUtil.getMemberIdFormToken(authHead);
+        long id = jwtUtil.getMemberIdFromToken(authHead);
         return MyProfileResponseDto.of(memberRepository.findByIdOrThrow(id));
     }
 
@@ -62,7 +62,7 @@ public class MemberService {
      */
     @Transactional
     public MyProfileUpdateResponseDto editMyProfileById(String token, MyProfileUpdateRequestDto dto) {
-        Member member = memberRepository.findById(jwtUtil.getMemberIdFormToken(token))
+        Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
                 .orElseThrow(MemberNotMatchedException::new);
 
         member.updateProfile(dto.getNickname(), dto.getImage());
@@ -80,7 +80,7 @@ public class MemberService {
      */
     @Transactional
     public void editPasswordById(String token, PasswordRequestDto dto) {
-        Member member = memberRepository.findById(jwtUtil.getMemberIdFormToken(token))
+        Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
                 .orElseThrow(MemberNotMatchedException::new);
 
         validateCurrentPassword(dto.getCurrentPassword(), member.getPassword());
@@ -99,7 +99,7 @@ public class MemberService {
      */
     @Transactional
     public void deleteProfileById(String token, MyProfileDeleteRequestDto dto) {
-        Member member = memberRepository.findById(jwtUtil.getMemberIdFormToken(token))
+        Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
                 .orElseThrow(PasswordNotMatchedException::new);
 
         validateCurrentPassword(dto.getPassword(), member.getPassword());
