@@ -15,16 +15,18 @@ public class CommentResponse {
     private Long writerId;
     private String writerNickname;
     private String content;
+    private String likeCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static CommentResponse fromEntity(Comment comment) {
+    public static CommentResponse fromEntity(Comment comment, Long likeCount) {
         return CommentResponse.builder()
                 .id(comment.getId())
                 .postId(comment.getPost().getId())
                 .writerId(comment.getWriter().getId())
                 .writerNickname(comment.getWriter().getNickname())
                 .content(comment.getContent())
+                .likeCount(likeCount.toString())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .build();

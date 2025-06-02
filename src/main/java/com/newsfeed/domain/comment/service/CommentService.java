@@ -5,6 +5,7 @@ import com.newsfeed.domain.comment.dto.CommentResponse;
 import com.newsfeed.domain.comment.entity.Comment;
 import com.newsfeed.domain.comment.exception.CommentNotFoundException;
 import com.newsfeed.domain.comment.repository.CommentRepository;
+import com.newsfeed.domain.like.service.LikeService;
 import com.newsfeed.domain.post.entity.Post;
 import com.newsfeed.domain.post.repository.PostRepository;
 import jakarta.transaction.Transactional;
@@ -12,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final LikeService likeService;
 
     @Transactional
     public void createComment(CommentRequest request, Long writerId) {
@@ -39,9 +43,21 @@ public class CommentService {
     }
 
     public List<CommentResponse> getCommentsByPost(Long postId) {
-        return commentRepository.findByPostId(postId).stream()
-                .map(CommentResponse::fromEntity)
+
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
                 .collect(Collectors.toList());
+
+        // 댓글별 좋아요 개수 조회 (Map<commentId, likeCount>)
+        Map<Long, Long> likeCountMap = likeService.getLikeCountForComments(commentIds);
+
+        List<CommentResponse> responses = new ArrayList<>();
+        for (Comment comment : comments) {
+            Long likeCount = likeCountMap.getOrDefault(comment.getId(), 0L);
+            responses.add(CommentResponse.fromEntity(comment, likeCount));
+        }
+        return responses;
     }
 
     @Transactional

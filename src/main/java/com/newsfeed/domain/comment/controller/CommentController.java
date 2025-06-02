@@ -3,6 +3,7 @@ package com.newsfeed.domain.comment.controller;
 import com.newsfeed.domain.comment.dto.CommentRequest;
 import com.newsfeed.domain.comment.dto.CommentResponse;
 import com.newsfeed.domain.comment.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,36 +19,54 @@ import java.util.Map;
 public class CommentController {
 
     private final CommentService commentService;
+    //private final JwtUtil jwtUtil;
+
+    /*
+    //헤더에서 토큰 추출하기
+    private Long extractMemberId(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken == null || !bearerToken.startsWith(JwtUtil.BEARER_PREFIX)) {
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
+        }
+        String token = bearerToken.substring(JwtUtil.BEARER_PREFIX.length());
+        return jwtUtil.getMemberIdFormToken(token);
+    }
+    */
 
     // 댓글 작성
     @PostMapping("/comments")
-    public ResponseEntity<Map<String, Long>> createComment(@RequestBody @Valid CommentRequest request) {
-        // JWT 기반 사용자라면 여기서 사용자 정보 추출 예정
-        Long mockWriterId = 1L; // 임시 처리
-        commentService.createComment(request, mockWriterId);
+    public ResponseEntity<Map<String, Long>> createComment(@RequestBody @Valid CommentRequest request,
+                                                           HttpServletRequest httpRequest) {
 
-        // 예: 저장 후 ID를 응답으로 반환하고 싶을 경우 처리 (이 코드는 예시이므로 실제 저장 ID를 반환하려면 서비스 수정 필요)
-        Map<String, Long> response = new HashMap<>();
-        response.put("commentId", 10L); // 저장된 commentId 반환하도록 변경 가능
-        return ResponseEntity.ok(response);
+        Long writerId = 1L; // 임시 처리
+
+        //Long writerId = extractMemberId(httpRequest);
+        commentService.createComment(request, writerId);
+        return ResponseEntity.ok().build();
     }
 
     // 댓글 수정
     @PutMapping("/comments/{id}")
     public ResponseEntity<Map<String, Long>> updateComment(@PathVariable Long id,
-                                                           @RequestBody @Valid CommentRequest request) {
-        Long mockWriterId = 1L; // 임시 처리
-        commentService.updateComment(id, request, mockWriterId);
-        Map<String, Long> response = new HashMap<>();
-        response.put("commentId", id);
-        return ResponseEntity.ok(response);
+                                                           @RequestBody @Valid CommentRequest request,
+                                                           HttpServletRequest httpRequest) {
+        Long requesterId = 1L; // 임시 처리
+
+       // Long requesterId = extractMemberId(httpRequest);
+        commentService.updateComment(id, request, requesterId);
+        return ResponseEntity.ok().build();
     }
 
     // 댓글 삭제
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        Long mockWriterId = 1L; // 임시 처리
-        commentService.deleteComment(id, mockWriterId);
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id,
+                                              HttpServletRequest httpRequest) {
+
+        Long requesterId = 1L; // 임시 처리
+
+        //Long requesterId = extractMemberId(httpRequest);
+        commentService.deleteComment(id, requesterId);
+
         return ResponseEntity.ok().build();
     }
 
