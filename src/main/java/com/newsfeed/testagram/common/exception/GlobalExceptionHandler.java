@@ -1,8 +1,6 @@
 package com.newsfeed.testagram.common.exception;
 
 import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
-import com.newsfeed.testagram.common.exception.file.FileUploadException;
-import com.newsfeed.testagram.common.exception.file.UnsupportedImageFormatException;
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
 import com.newsfeed.testagram.common.exception.member.*;
@@ -22,11 +20,10 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleMemberNotFoundException(MemberNotFoundException e) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", "MEMBER_NOT_FOUND");
-        error.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    public ResponseEntity<ErrorResponse> handleCustomException(MemberNotFoundException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(IncorrectPasswordException e) {
@@ -42,12 +39,25 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
-    // 409: 같은 비밀번호
     @ExceptionHandler(SamePasswordException.class)
-    public ResponseEntity<String> handleSamePassword(SamePasswordException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleCustomException(SamePasswordException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(InvalidPasswordFormatException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+    @ExceptionHandler(PasswordNotMatchedException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(PasswordNotMatchedException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(EmailAlreadyExistsException e) {
         return ResponseEntity
@@ -55,23 +65,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
-    // 400: 비밀번호 형식 오류
-    @ExceptionHandler(InvalidPasswordFormatException.class)
-    public ResponseEntity<String> handleInvalidPasswordFormat(InvalidPasswordFormatException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
+
 
     @ExceptionHandler(EmailNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(EmailNotFoundException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
-    }
-
-    // 403: 이미 탈퇴한 사용자
-    @ExceptionHandler(AlreadyWithdrawnMemberException.class)
-    public ResponseEntity<String> handleAlreadyWithdrawn(AlreadyWithdrawnMemberException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
 
@@ -82,16 +82,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getStatusCode().value())
                 .body(new ErrorResponse(e.getStatusCode().value(), message));
-    }
-    @ExceptionHandler(UnsupportedImageFormatException.class)
-    public ResponseEntity<String> handleUnsupportedImageFormat(UnsupportedImageFormatException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-    // 500: 파일 업로드 실패
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<String> handleFileUpload(FileUploadException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
     @ExceptionHandler(PostNotFoundException.class)

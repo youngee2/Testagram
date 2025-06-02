@@ -22,8 +22,8 @@ public class MyProfileResponseDto {
         return new MyProfileResponseDto(
                 member.getId(),
                 member.getEmail(),
-                member.getImage(),
                 member.getNickname(),
+                member.getImage(),
                 member.getCreatedAt()
         );
     }
