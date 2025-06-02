@@ -12,14 +12,15 @@ import lombok.Getter;
  */
 public class MemberResponseDto {
     private String email;
-    private String image;
     private String nickname;
+    private String image;
+
 
     public static MemberResponseDto of(Member member) {
         return new MemberResponseDto(
                 member.getEmail(),
-                member.getImage(),
-                member.getNickname()
+                member.getNickname(),
+                member.getImage()
         );
     }
 }

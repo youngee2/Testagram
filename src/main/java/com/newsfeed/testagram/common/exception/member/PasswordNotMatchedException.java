@@ -1,5 +1,7 @@
 package com.newsfeed.testagram.common.exception.member;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * 사용자가 입력한 현재 비밀번호가 실제 비밀번호와 일치하지 않을 때 발생하는 예외입니다.
  *
@@ -17,5 +19,9 @@ public class PasswordNotMatchedException extends RuntimeException {
 
     public PasswordNotMatchedException(String message) {
         super(message);
+    }
+
+    public HttpStatus getStatus() {
+        return HttpStatus.CONFLICT;
     }
 }
