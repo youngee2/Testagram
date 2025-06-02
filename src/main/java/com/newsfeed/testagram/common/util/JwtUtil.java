@@ -25,7 +25,7 @@ public class JwtUtil {
      * JWT 토큰의 유효 시간 (단위: 밀리초)
      * 현재 설정: 5분
      */
-    private final long TOKEN_TIME = 5 * 60 * 1000L; // 5분
+    private final long TOKEN_TIME = 60 * 60 * 1000L; // 5분
 
     @Value("${jwt.secret.key}")
     private String secretKey;
