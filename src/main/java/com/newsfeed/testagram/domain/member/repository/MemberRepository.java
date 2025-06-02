@@ -9,12 +9,14 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
-    default Member findByEmailOrThrow(String email){
+    default Member findByEmailOrThrow(String email) {
         return this.findByEmail(email)
                 .orElseThrow(EmailNotFoundException::new);
     }
+
     Optional<Member> findById(long id);
-    default Member findByIdOrThrow(long id){
+
+    default Member findByIdOrThrow(long id) {
         return this.findById(id)
                 .filter(Member::getActive)
                 .orElseThrow(MemberNotFoundException::new);

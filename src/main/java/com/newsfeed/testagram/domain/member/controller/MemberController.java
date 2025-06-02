@@ -23,7 +23,7 @@ public class MemberController {
     public ResponseEntity<MemberSignUpResponse> save(@Valid @RequestBody MemberSignUpRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(memberService.signup(request.getEmail(),request.getPassword(),request.getMemberName()));
+                .body(memberService.signup(request.getEmail(),request.getPassword(),request.getNickname()));
     }
     /**
      * 사용자 ID로 사용자 정보를 조회합니다.

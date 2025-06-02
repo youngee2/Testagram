@@ -2,6 +2,7 @@ package com.newsfeed.testagram.domain.post.entity;
 
 import com.newsfeed.testagram.common.BaseEntity;
 import com.newsfeed.testagram.domain.member.entity.Member;
+import com.newsfeed.testagram.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
