@@ -26,10 +26,4 @@ public class LoginController {
                 .body(loginService.login(request.getEmail(),request.getPassword()));
     }
 
-    @GetMapping("/member/me")
-    public ResponseEntity<?> getMyInfo(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace(BEARER_PREFIX, "");
-        return ResponseEntity.ok("내 이메일 " + jwtUtil.getEmailFromToken(token)+"내 아이디:"+jwtUtil.getMemberIdFormToken(token));
-    }
-
 }
