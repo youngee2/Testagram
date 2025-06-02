@@ -21,6 +21,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleMemberNotFoundException(MemberNotFoundException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "MEMBER_NOT_FOUND");
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(IncorrectPasswordException e) {
         return ResponseEntity
@@ -68,14 +75,14 @@ public class GlobalExceptionHandler {
     }
 
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
-//        FieldError fieldError = e.getBindingResult().getFieldError();
-//        String message = (fieldError != null) ? fieldError.getDefaultMessage() : "유효성 검사 실패";
-//        return ResponseEntity
-//                .status(e.getStatusCode().value())
-//                .body(new ErrorResponse(e.getStatusCode().value(), message));
-//    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String message = (fieldError != null) ? fieldError.getDefaultMessage() : "유효성 검사 실패";
+        return ResponseEntity
+                .status(e.getStatusCode().value())
+                .body(new ErrorResponse(e.getStatusCode().value(), message));
+    }
     @ExceptionHandler(UnsupportedImageFormatException.class)
     public ResponseEntity<String> handleUnsupportedImageFormat(UnsupportedImageFormatException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -101,15 +108,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    // 유효성 검사 실패 처리 (예: @Valid)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
 
     // 기타 예외 처리 예시
     @ExceptionHandler(Exception.class)
