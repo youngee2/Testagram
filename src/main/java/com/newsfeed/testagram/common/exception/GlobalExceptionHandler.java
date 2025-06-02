@@ -1,6 +1,8 @@
 package com.newsfeed.testagram.common.exception;
 
+import com.newsfeed.testagram.common.exception.comment.CommentException;
 import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
+import com.newsfeed.testagram.common.exception.like.LikeException;
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
 import com.newsfeed.testagram.common.exception.member.*;
@@ -127,6 +129,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getStatusCode().value())
                 .body(new ErrorResponse(e.getStatusCode().value(), message));
+    }
+
+    //좋아요 서비스 예외처리
+    @ExceptionHandler(LikeException.class)
+    public ResponseEntity<ErrorResponse> handleLikeException(LikeException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    //댓글 서비스 예외처리
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<ErrorResponse> handleCommentException(CommentException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
 

@@ -1,5 +1,6 @@
 package com.newsfeed.testagram.domain.comment.service;
 
+import com.newsfeed.testagram.common.exception.comment.CommentException;
 import com.newsfeed.testagram.domain.comment.dto.CommentRequest;
 import com.newsfeed.testagram.domain.comment.dto.CommentResponse;
 import com.newsfeed.testagram.domain.comment.entity.Comment;
@@ -9,6 +10,7 @@ import com.newsfeed.testagram.domain.post.entity.Post;
 import com.newsfeed.testagram.domain.post.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +30,7 @@ public class CommentService {
     @Transactional
     public void createComment(CommentRequest request, Long writerId) {
         Post post = postRepository.findById(request.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentException("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND));
 
         Comment comment = Comment.builder()
                 .content(request.getContent())
@@ -65,7 +67,7 @@ public class CommentService {
                 .orElseThrow();
 
         if (!comment.getPost().getWriter().getId().equals(requesterId)) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new CommentException("수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
         comment.updateContent(request.getContent());
@@ -79,7 +81,7 @@ public class CommentService {
         // 댓글 작성자나 게시글 작성자만 삭제 가능
         Long postWriterId = comment.getPost().getWriter().getId();
         if (!comment.getPost().getWriter().getId().equals(requesterId)) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            throw new CommentException("삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
         commentRepository.delete(comment);
