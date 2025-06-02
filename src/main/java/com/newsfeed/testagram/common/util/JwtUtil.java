@@ -25,6 +25,7 @@ public class JwtUtil {
      * 현재 설정: 5분
      */
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 5분
+    public static final String BEARER_PREFIX = "Bearer: ";
 
     @Value("${jwt.secret.key}")
     private String secretKey;
