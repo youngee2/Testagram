@@ -67,5 +67,5 @@ public class Member {
         this.active = false;
     }
 
-    
+
 }

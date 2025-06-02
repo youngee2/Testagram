@@ -11,5 +11,5 @@ public class MemberSignUpRequest {
     private String email;
     @Pattern(regexp = PasswordValid.passwordRegex,message = "비밀번호: 영문 대소문자 + 숫자 + 특수문자 1자 이상 포함, 최소 8자")
     private String password;
-    private String memberName;
+    private String nickname;
 }

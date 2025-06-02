@@ -12,6 +12,7 @@ public class PostDetailResponseDto {
     private String message;
     private String nickName;
     private String content;
+    private long likeCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

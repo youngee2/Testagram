@@ -105,6 +105,7 @@ public class LikeService {
     }
 
     //댓글 좋아요 개수 불러오기
+    @Transactional
     public Map<Long, Long> getLikeCountForComments(List<Long> commentIds) {
         List<Object[]> results = commentLikeRepository.countLikesByCommentIds(commentIds);
         Map<Long, Long> likeCountMap = new HashMap<>();
@@ -117,6 +118,18 @@ public class LikeService {
 
         return likeCountMap;
     }
+
+    /*
+    //게시글 좋아요 개수 불러오기
+    @Transactional
+    public Long getLikeCountForPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        return postLikeRepository.countByPost(post);
+    }
+    */
+
 
     // ====== private ======
 
