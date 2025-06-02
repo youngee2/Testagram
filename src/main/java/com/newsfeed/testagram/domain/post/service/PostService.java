@@ -5,6 +5,7 @@ import com.newsfeed.testagram.common.exception.member.MemberNotMatchedException;
 import com.newsfeed.testagram.common.exception.member.UnauthorizedAccessException;
 import com.newsfeed.testagram.common.exception.post.PostNotFoundException;
 import com.newsfeed.testagram.common.util.JwtUtil;
+import com.newsfeed.testagram.domain.like.repository.PostLikeRepository;
 import com.newsfeed.testagram.domain.member.entity.Member;
 import com.newsfeed.testagram.domain.member.repository.MemberRepository;
 import com.newsfeed.testagram.domain.post.dto.request.CreatePostRequestDto;
@@ -35,6 +36,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private final PostLikeRepository postLikeRepository;
 
     public CreatePostResponseDto save(CreatePostRequestDto requestDto, Long memberId) {
         Member user = memberRepository.findById(memberId)
@@ -89,6 +91,7 @@ public class PostService {
                     "게시물을 조회하였습니다.",
                     nickName,
                     post.getContent(),
+                    postLikeRepository.countByPost(post),
                     post.getCreatedAt(),
                     post.getUpdatedAt()
             );
@@ -99,6 +102,7 @@ public class PostService {
                 "게시물을 찾을 수 없습니다.",
                 "",
                 "",
+                0,
                 null,
                 null
         );

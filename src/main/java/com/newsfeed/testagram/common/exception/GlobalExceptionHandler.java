@@ -21,52 +21,74 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * 사용자가 잘못된 비밀번호를 입력할 경우 발생합니다.
+     * 패스워드 불일치
+     * 예시 메시지: "비밀번호가 일치하지 않습니다."
+     *
+     * @param e IncorrectPasswordException 예외 객체
+     * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
+     */
     @ExceptionHandler(IncorrectPasswordException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(IncorrectPasswordException e) {
+    public ResponseEntity<ErrorResponse> handleIncorrectPasswordException(IncorrectPasswordException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
+    /**
+     * 사용자가 로그인에 실패했을 경우 발생합니다.
+     * 로그인 실패 (아이디 또는 비밀번호 불일치, 존재하지 않는 사용자 등)
+     * 예시 메시지: "로그인에 실패하였습니다."
+     *
+     * @param e LoginFailedException 예외 객체
+     * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
+     */
     @ExceptionHandler(LoginFailedException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(LoginFailedException e) {
+    public ResponseEntity<ErrorResponse> handleLoginFailedException(LoginFailedException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
-    // 409: 같은 비밀번호
-    @ExceptionHandler(SamePasswordException.class)
-    public ResponseEntity<String> handleSamePassword(SamePasswordException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
-
+    /**
+     * 회원가입 시 이미 존재하는 이메일을 입력한 경우 발생합니다.
+     * 이메일 중복
+     * 예시 메시지: "이미 사용 중인 이메일입니다."
+     *
+     * @param e EmailAlreadyExistsException 예외 객체
+     * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
+     */
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(EmailAlreadyExistsException e) {
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
-    // 400: 비밀번호 형식 오류
-    @ExceptionHandler(InvalidPasswordFormatException.class)
-    public ResponseEntity<String> handleInvalidPasswordFormat(InvalidPasswordFormatException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
+    /**
+     * 입력한 이메일이 시스템에 존재하지 않을 경우 발생합니다.
+     * 이메일 미존재
+     * 예시 메시지: "존재하지 않는 이메일입니다."
+     *
+     * @param e EmailNotFoundException 예외 객체
+     * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
+     */
     @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(EmailNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleEmailNotFoundException(EmailNotFoundException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
-    // 403: 이미 탈퇴한 사용자
-    @ExceptionHandler(AlreadyWithdrawnMemberException.class)
-    public ResponseEntity<String> handleAlreadyWithdrawn(AlreadyWithdrawnMemberException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-    }
-
+    /**
+     * 요청 데이터의 유효성 검사에 실패한 경우 발생합니다.
+     * 요청값 유효성 검증 실패 (ex. @NotBlank, @Email 등)
+     * 예시 메시지: "이메일 형식이 올바르지 않습니다.", "비밀번호는 필수 입력값입니다." 등
+     *
+     * @param e MethodArgumentNotValidException 예외 객체
+     * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
         FieldError fieldError = e.getBindingResult().getFieldError();
@@ -75,6 +97,26 @@ public class GlobalExceptionHandler {
                 .status(e.getStatusCode().value())
                 .body(new ErrorResponse(e.getStatusCode().value(), message));
     }
+
+
+    // 409: 같은 비밀번호
+    @ExceptionHandler(SamePasswordException.class)
+    public ResponseEntity<String> handleSamePassword(SamePasswordException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    // 400: 비밀번호 형식 오류
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    public ResponseEntity<String> handleInvalidPasswordFormat(InvalidPasswordFormatException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    // 403: 이미 탈퇴한 사용자
+    @ExceptionHandler(AlreadyWithdrawnMemberException.class)
+    public ResponseEntity<String> handleAlreadyWithdrawn(AlreadyWithdrawnMemberException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     @ExceptionHandler(UnsupportedImageFormatException.class)
     public ResponseEntity<String> handleUnsupportedImageFormat(UnsupportedImageFormatException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -92,23 +134,13 @@ public class GlobalExceptionHandler {
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
+
+    // 댓글 없음 예외 처리
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleCommentNotFound(CommentNotFoundException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "COMMENT_NOT_FOUND");
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    // 유효성 검사 실패 처리 (예: @Valid)
-
-
-    // 기타 예외 처리 예시
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", "INTERNAL_SERVER_ERROR");
-        error.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
