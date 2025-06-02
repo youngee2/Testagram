@@ -1,15 +1,14 @@
 package com.newsfeed.testagram.domain.like.service;
 
 import com.newsfeed.testagram.domain.comment.entity.Comment;
+import com.newsfeed.testagram.domain.comment.repository.CommentRepository;
 import com.newsfeed.testagram.domain.like.entity.CommentLike;
 import com.newsfeed.testagram.domain.like.entity.PostLike;
 import com.newsfeed.testagram.domain.like.repository.CommentLikeRepository;
 import com.newsfeed.testagram.domain.like.repository.PostLikeRepository;
 import com.newsfeed.testagram.domain.member.entity.Member;
-//import com.newsfeed.domain.member.repository.MemberRepository;
 import com.newsfeed.testagram.domain.member.repository.MemberRepository;
 import com.newsfeed.testagram.domain.post.entity.Post;
-import com.newsfeed.testagram.domain.comment.repository.CommentRepository;
 import com.newsfeed.testagram.domain.post.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

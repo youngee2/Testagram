@@ -1,15 +1,21 @@
 package com.newsfeed.testagram.domain.post.entity;
 
+import com.newsfeed.testagram.common.BaseEntity;
+import com.newsfeed.testagram.domain.member.entity.Member;
 import com.newsfeed.testagram.domain.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "Post")
 @Builder
-public class Post {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,27 +31,8 @@ public class Post {
 //    @Column(nullable = false,name = "writer_id")
 //    private Long writerId;
 
-
-    //기본생성자
-    protected  Post(){}
-
-    //생성자
-    public Post(String content){
+    public void updatePost(String content){
         this.content = content;
     }
-
-    public Post(Long id, String content, Member writer) {
-        this.id = id;
-        this.content = content;
-        this.writer = writer;
-    }
-
-
-
-
-
-
-
-
 
 }

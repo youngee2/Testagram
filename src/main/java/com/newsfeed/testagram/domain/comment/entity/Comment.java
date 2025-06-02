@@ -2,7 +2,6 @@ package com.newsfeed.testagram.domain.comment.entity;
 
 import com.newsfeed.testagram.domain.member.entity.Member;
 import com.newsfeed.testagram.domain.post.entity.Post;
-
 import jakarta.persistence.*;
 import lombok.*;
 
