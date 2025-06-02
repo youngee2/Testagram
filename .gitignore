@@ -38,6 +38,7 @@ out/
 
 /.gitattributes
 /src/main/resources/application.properties
+/src/main/resources/application.yaml
 /build.gradle
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties
