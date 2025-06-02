@@ -19,7 +19,6 @@ public class JwtUtil {
      * JWT 토큰의 접두사입니다.
      * 예시 값: "Bearer "
      */
-    public static final String BEARER_PREFIX = "Bearer ";
 
     /**
      * JWT 토큰의 유효 시간 (단위: 밀리초)
