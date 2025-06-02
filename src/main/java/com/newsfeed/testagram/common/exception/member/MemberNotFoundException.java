@@ -1,8 +1,5 @@
 package com.newsfeed.testagram.common.exception.member;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 /**
  * 회원 정보가 존재하지 않을 때 발생하는 예외입니다.
  * 주로 다음 상황에서 사용됩니다.
@@ -19,9 +16,5 @@ public class MemberNotFoundException extends RuntimeException {
 
     public MemberNotFoundException(String message) {
         super(message);
-    }
-
-    public HttpStatus getStatus() {
-        return HttpStatus.NOT_FOUND;
     }
 }

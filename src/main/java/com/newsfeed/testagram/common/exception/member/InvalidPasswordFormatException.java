@@ -1,8 +1,5 @@
 package com.newsfeed.testagram.common.exception.member;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 /**
  *비밀번호 형식이 올바르지 않을 때 발생하는 예외입니다.
  *
@@ -20,9 +17,5 @@ public class InvalidPasswordFormatException extends RuntimeException{
 
     public InvalidPasswordFormatException(String message) {
         super(message);
-    }
-
-    public HttpStatus getStatus() {
-        return HttpStatus.BAD_REQUEST;
     }
 }
