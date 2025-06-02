@@ -30,7 +30,7 @@ public class LikeController {
 
 
     // 게시글 좋아요
-    @PostMapping("/posts/{postId}")
+    @PostMapping("/posts/{postId}/likes")
     public ResponseEntity<Void> likePost(
             @PathVariable Long postId,
             HttpServletRequest request
@@ -42,7 +42,7 @@ public class LikeController {
     }
 
     // 게시글 좋아요 취소
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping("/posts/{postId}/likes")
     public ResponseEntity<Void> unlikePost(
             @PathVariable Long postId,
             HttpServletRequest request
@@ -54,7 +54,7 @@ public class LikeController {
     }
 
     // 댓글 좋아요
-    @PostMapping("/comments/{commentId}")
+    @PostMapping("/comments/{commentId}/likes")
     public ResponseEntity<Void> likeComment(
             @PathVariable Long commentId,
             HttpServletRequest request
@@ -66,7 +66,7 @@ public class LikeController {
     }
 
     // 댓글 좋아요 취소
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}/likes")
     public ResponseEntity<Void> unlikeComment(
             @PathVariable Long commentId,
             HttpServletRequest request
