@@ -1,7 +1,10 @@
 package com.newsfeed.testagram.domain.post.service;
 
 import com.newsfeed.testagram.common.exception.member.MemberNotFoundException;
+import com.newsfeed.testagram.common.exception.member.MemberNotMatchedException;
+import com.newsfeed.testagram.common.exception.member.UnauthorizedAccessException;
 import com.newsfeed.testagram.common.exception.post.PostNotFoundException;
+import com.newsfeed.testagram.common.util.JwtUtil;
 import com.newsfeed.testagram.domain.like.repository.PostLikeRepository;
 import com.newsfeed.testagram.domain.member.entity.Member;
 import com.newsfeed.testagram.domain.member.repository.MemberRepository;
@@ -32,10 +35,11 @@ public class PostService {
     //    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
     private final PostLikeRepository postLikeRepository;
 
-    public CreatePostResponseDto save(CreatePostRequestDto requestDto) {
-        Member user = memberRepository.findById(requestDto.getWriterId())
+    public CreatePostResponseDto save(CreatePostRequestDto requestDto, Long memberId) {
+        Member user = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);// 이 부분 수정
         // Post 객체 생성
         Post post = Post.builder()
@@ -71,7 +75,7 @@ public class PostService {
     }
 
     //단건 조회기능
-    @Transactional(readOnly = true)
+
     public PostDetailResponseDto findById(Long id) {
         //데이터 조회
         Optional<Post> findPost = postRepository.findById(id);
@@ -107,7 +111,14 @@ public class PostService {
     }
 
     // 수정 기능
-    public PostUpdateResponseDto updatePostService(Long postId, PostUpdateRequestDto requestDto) {
+    @Transactional
+    public PostUpdateResponseDto updatePostService(String token, Long postId, PostUpdateRequestDto requestDto) {
+
+        if(!jwtUtil.validateToken((token))){
+            Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
+                    .orElseThrow(MemberNotMatchedException::new);
+        }
+
         // 데이터
         String content = requestDto.getContent();
         // 조회
@@ -120,20 +131,26 @@ public class PostService {
     }
 
     // 삭제기능
+    @Transactional
+    public PostDeleteResponseDto deletePostService(String token, Long postId) {
 
-    public PostDeleteResponseDto deletePostService(Long postId) {
-        // 조회
-        Optional<Post> PostOptional = postRepository.findById(postId);
-        if (PostOptional.isPresent()) {
-            Post foundPost = PostOptional.get();
-            postRepository.delete(foundPost);
-            // dto 만들기
-            // dto 반환
-            return new PostDeleteResponseDto(200, "deleted");
-        } else {
-            // 실패 용 응답 만들어서 반환
-            return null;
+        if(!jwtUtil.validateToken((token))){
+            Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
+                    .orElseThrow(MemberNotMatchedException::new);
         }
+        // 조회
+//        Optional<Post> PostOptional = postRepository.findById(postId);
+        Long memberId = jwtUtil.getMemberIdFromToken(token);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(PostNotFoundException::new);
+        // 게시물 조회
+        Post post = postRepository.findById(postId)
+                        .orElseThrow(PostNotFoundException::new);
+
+        postRepository.delete(post);
+
+            return new PostDeleteResponseDto(200, "deleted");
+
     }
 
     public Page<SearchPostResponseDto> searchPost(String from, String to, Pageable pageable) {

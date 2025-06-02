@@ -30,7 +30,6 @@ public class LoginController {
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(loginService.login(request.getEmail(), request.getPassword()));

@@ -85,7 +85,6 @@ public class JwtUtil {
     public String getEmailFromToken(String token) {
         return parseToken(token).getSubject();
     }
-
     /**
      * JWT 토큰에서 회원 ID(memberId)를 추출합니다.
      *
