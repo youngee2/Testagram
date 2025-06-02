@@ -1,4 +1,4 @@
-package com.newsfeed.testagram.domain.member.dto;
+package com.newsfeed.testagram.domain.member.dto.response;
 
 import com.newsfeed.testagram.domain.member.entity.Member;
 import lombok.AllArgsConstructor;

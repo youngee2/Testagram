@@ -42,6 +42,7 @@ public class JwtUtil {
 
 
     public Claims parseToken(String token) {
+        token = token.replace(BEARER_PREFIX, "");
         return Jwts.parser()
                 .verifyWith(key)
                 .build()

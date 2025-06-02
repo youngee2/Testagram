@@ -1,4 +1,4 @@
-package com.newsfeed.testagram.domain.member.dto;
+package com.newsfeed.testagram.domain.member.dto.request;
 
 import com.newsfeed.testagram.common.valid.EmailValid;
 import com.newsfeed.testagram.common.valid.PasswordValid;
