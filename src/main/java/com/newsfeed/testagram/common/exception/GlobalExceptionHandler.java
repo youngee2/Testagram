@@ -67,14 +67,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
-        FieldError fieldError = e.getBindingResult().getFieldError();
-        String message = (fieldError != null) ? fieldError.getDefaultMessage() : "유효성 검사 실패";
-        return ResponseEntity
-                .status(e.getStatusCode().value())
-                .body(new ErrorResponse(e.getStatusCode().value(), message));
-    }
+
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
+//        FieldError fieldError = e.getBindingResult().getFieldError();
+//        String message = (fieldError != null) ? fieldError.getDefaultMessage() : "유효성 검사 실패";
+//        return ResponseEntity
+//                .status(e.getStatusCode().value())
+//                .body(new ErrorResponse(e.getStatusCode().value(), message));
+//    }
     @ExceptionHandler(UnsupportedImageFormatException.class)
     public ResponseEntity<String> handleUnsupportedImageFormat(UnsupportedImageFormatException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
