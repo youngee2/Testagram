@@ -6,6 +6,7 @@ import com.newsfeed.testagram.common.exception.file.UnsupportedImageFormatExcept
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
 import com.newsfeed.testagram.common.exception.member.*;
+import com.newsfeed.testagram.common.exception.post.PostNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -79,5 +80,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<String> handleFileUpload(FileUploadException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostNotFound(PostNotFoundException e){
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 }

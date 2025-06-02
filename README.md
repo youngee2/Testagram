@@ -75,7 +75,16 @@
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
+
 ```
+<br/>
+
+--------
+# 3. 게시물 단건조회
+## GET
+###  /api/post/{postid}
+
+<br/>  
 
 ### 예외
 | 코드    | 사유              |
@@ -99,7 +108,6 @@
 }
 ```
 
-### 예외
 
 | 상태 코드 | 설명 |
 | --- | --- |
