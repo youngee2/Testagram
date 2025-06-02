@@ -1,0 +1,5 @@
+security:
+  anonymous-urls:
+    - "/"
+    - "/api/login"
+    - "/api/member/register"
