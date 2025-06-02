@@ -3,15 +3,12 @@ package com.newsfeed.testagram.domain.follow.controller;
 import com.newsfeed.testagram.common.util.JwtUtil;
 import com.newsfeed.testagram.domain.follow.dto.follow.*;
 import com.newsfeed.testagram.domain.follow.service.FollowService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +33,7 @@ public class FollowController {
             @RequestBody FollowRequestDTO followRequestDto,
             @RequestHeader("Authorization") String token
     ) {
-        Long loginMemberId = jwtUtil.getMemberIdFormToken(token);
+        Long loginMemberId = jwtUtil.getMemberIdFromToken(token);
         Long targetMemberId = followRequestDto.getTargetMemberId();
 
         FollowResponseDto followResponseDto = followService.followMember(loginMemberId, targetMemberId);
@@ -52,7 +49,7 @@ public class FollowController {
     public ResponseEntity<List<FollowingMemberResponseDto>> findFollowingMember(
             @RequestHeader("Authorization") String token
     ) {
-        Long loginMemberId = jwtUtil.getMemberIdFormToken(token);
+        Long loginMemberId = jwtUtil.getMemberIdFromToken(token);
         List<FollowingMemberResponseDto> FollowingMemberResponseDtoList = followService.findFollowingMembers(loginMemberId);
 
         return ResponseEntity.ok(FollowingMemberResponseDtoList);
@@ -62,7 +59,7 @@ public class FollowController {
     public ResponseEntity<List<FollowerMemberResponseDto>> findFollowerMember(
             @RequestHeader("Authorization") String token
     ) {
-        Long loginMemberId = jwtUtil.getMemberIdFormToken(token);
+        Long loginMemberId = jwtUtil.getMemberIdFromToken(token);
         List<FollowerMemberResponseDto> followerMemberResponseDtoList = followService.findFollowerMembers(loginMemberId);
 
         return ResponseEntity.ok(followerMemberResponseDtoList);
@@ -73,7 +70,7 @@ public class FollowController {
             @RequestHeader("Authorization") String token,
             @PathVariable Long targetMemberId
     ) {
-        Long loginMemberId = jwtUtil.getMemberIdFormToken(token);
+        Long loginMemberId = jwtUtil.getMemberIdFromToken(token);
 
         followService.delete(loginMemberId, targetMemberId);
 
@@ -86,7 +83,7 @@ public class FollowController {
             @RequestParam(defaultValue = "10") int size,
             @RequestHeader("Authorization") String token
     ) {
-        Long loginMemberId = jwtUtil.getMemberIdFormToken(token);
+        Long loginMemberId = jwtUtil.getMemberIdFromToken(token);
         Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         Page<FollowingMemberPostResponseDto> followingMemberPostResponseDtoPage = followService.findFollowingMemberPosts(loginMemberId, pageable);
 

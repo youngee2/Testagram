@@ -29,7 +29,7 @@ public class CommentController {
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
         String token = bearerToken.substring(JwtUtil.BEARER_PREFIX.length());
-        return jwtUtil.getMemberIdFormToken(token);
+        return jwtUtil.getMemberIdFromToken(token);
     }
 
 

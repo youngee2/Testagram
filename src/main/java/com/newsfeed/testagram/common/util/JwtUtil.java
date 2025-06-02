@@ -91,7 +91,7 @@ public class JwtUtil {
      * @param token JWT 토큰 문자열
      * @return 회원 ID (Long 타입)
      */
-    public Long getMemberIdFormToken(String token) {
+    public Long getMemberIdFromToken(String token) {
         return parseToken(token).get("memberId", Long.class);
     }
 

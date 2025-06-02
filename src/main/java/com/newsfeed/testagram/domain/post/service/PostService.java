@@ -2,7 +2,6 @@ package com.newsfeed.testagram.domain.post.service;
 
 import com.newsfeed.testagram.common.exception.member.MemberNotFoundException;
 import com.newsfeed.testagram.common.exception.member.MemberNotMatchedException;
-import com.newsfeed.testagram.common.exception.member.UnauthorizedAccessException;
 import com.newsfeed.testagram.common.exception.post.PostNotFoundException;
 import com.newsfeed.testagram.common.util.JwtUtil;
 import com.newsfeed.testagram.domain.like.repository.PostLikeRepository;

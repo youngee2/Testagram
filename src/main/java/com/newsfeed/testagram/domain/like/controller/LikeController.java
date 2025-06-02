@@ -22,7 +22,7 @@ public class LikeController {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith(JwtUtil.BEARER_PREFIX)) {
             token = token.replace(JwtUtil.BEARER_PREFIX, "");
-            return jwtUtil.getMemberIdFormToken(token);
+            return jwtUtil.getMemberIdFromToken(token);
         } else {
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
