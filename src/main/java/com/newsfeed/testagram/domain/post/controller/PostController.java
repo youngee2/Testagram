@@ -5,6 +5,7 @@ import com.newsfeed.testagram.domain.post.dto.request.PostUpdateRequestDto;
 import com.newsfeed.testagram.domain.post.dto.response.*;
 import com.newsfeed.testagram.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -65,6 +66,20 @@ public class PostController {
         PostDeleteResponseDto responseDto = postService.deletePostService(postId);
         ResponseEntity<PostDeleteResponseDto> response = new ResponseEntity<>(responseDto,HttpStatus.OK);
         return response;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<SearchPostResponseDto>> searchPost(
+            @RequestParam String from,
+            @RequestParam String to,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
+        Page<SearchPostResponseDto> searchPostResponseDtoPage = postService.searchPost(from, to, pageable);
+
+        return ResponseEntity.ok(searchPostResponseDtoPage);
     }
 
 }

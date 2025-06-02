@@ -1,116 +1,18 @@
-## 회원가입 API 명세서
-| 항목             | 내용                     |
-| -------------- | ---------------------- |
-| **HTTP Method** | `POST`                 |
-| **URL**  | `/api/member/register` |
-| **설명**         | 사용자가 이메일과 비밀번호로 회원가입   |
+## 팔로우
 
-### 요구사항
-1. 이메일 형식 유효성
-2. 비밀번호: 영문 대소문자 + 숫자 + 특수문자 1자 이상 포함, 최소 8자
-3. 이메일 중복 가입 불가
+| 기능            | Method | URL               | RequestBody               | Response                                                                                                                                            | 상태 |
+|---------------|--------|-------------------|---------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------| -- |
+| 팔로우 하기        | POST   | `/api/follows`    | `{ "targetMemberId": 2 }` | `{"followerId": 1, "followingId": 2, "followingNickName": "테스트유저2", "followingEmail": "member2@example.com"}`                                       | 완료 |
+| 팔로우 멤버 조회     | GET    | `/api/follows/followings` | 없음| `[{"followingMemberId": 2,"followingMemberNickname": "테스트유저2","followingMemberEmail": "member2@example.com"}, ...]`                                 | 완료 |
+| 팔로잉 멤버 조회     | GET    | `/api/follows/followers` | 없음| `[{"followerMemberId": 1,"followerMemberNickname": "테스트유저1","followerMemberEmail": "member1@example.com"}, ...]`                                    | 완료 |
+| 언팔로우          | DELETE | `/api/follows/{targetMemberId}` | 없음| 없음                                                                                                                                                  | 완료 |
+| 팔로우 멤버 게시글 조회 | GET    | `/api/follows/followings/posts` | page, size| `"postId": 2,"writerId": 2,"writerNickname": "테스트유저2","writerEmail": "member2@example.com","content": "테스트게시물2","createdAt": "2025-05-28 13:00:00"` | 완료 |
 
-### 요청 예시
-```json
-{
-  "email": "test@example.com",
-  "password": "Password123!",
-  "nickname": "kun"
-}
-```
+## 게시글
 
-### 응답 예시
-
-```json
-{
-    "message": "회원가입이 완료되었습니다.",
-    "userId": 1
-}
-
-```
-
-### 예외
-| 코드    | 사유             |
-| ----- | -------------- |
-| `400` | 이메일/비밀번호 형식 오류 |
-| `409` | 이메일 중복         |
-| `500` | 서버 내부 오류       |
-
-| 상태 코드 | 설명 |
-| --- | --- |
-| 400 | 정보 누락 |
-| 409 | 정보 중복 |
-
----
-## 로그인 API 명세서
-| 항목               | 내용                                |
-| ---------------- | --------------------------------- |
-| **HTTP Method**  | `POST`                            |
-| **URL**          | `/api/member/login`               |
-| **설명**           | 사용자가 이메일/비밀번호로 로그인하여 JWT 토큰을 발급받음 |
-
-## 3. 비밀번호 변경
-
-- **METHOD**: `PATCH`
-- **URL**: `/api/member/me/password`
-- **설명**: 현재 로그인 사용자의 비밀번호를 변경합니다.
-- **요구사항**
-    - 본인 확인을 위해 현재 비밀번호를  입력하여 같은 경우에만 변경 가능
-    - 현재 비밀번호와 동일한 비밀번호로는 변경 불가
-    - 비밀번호 형식이 올바르지 않은 경우 변경 불가
-
-### 요청 바디
-
-### 요청 예시
-```json
-{
-  "email": "test@example.com",
-  "password": "Password123!"
-}
-```
-
-### 응답 예시
-
-```json
-{
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-
-```
-<br/>
-
---------
-# 3. 게시물 단건조회
-## GET
-###  /api/post/{postid}
-
-<br/>  
-
-### 예외
-| 코드    | 사유              |
-| ----- | --------------- |
-| `401` | 이메일 또는 비밀번호 불일치 |
-| `404` | 존재하지 않는 사용자     |
-| `500` | 서버 내부 오류        |
-
-#### Authorization 헤더 없음 / 잘못된 형식
-```json
-{
-  "error": "401",
-  "message": "토큰이 유효하지 않습니다."
-}
-```
-#### JWT 토큰 만료됨
-```json
-{
-  "error": "401",
-  "message": "토큰이 만료되었습니다."
-}
-```
+| 기능           | Method | URL                                | RequestBody      | Response                                                                                                                 | 상태 |
+|--------------|--------| ---------------------------------- |------------------|--------------------------------------------------------------------------------------------------------------------------| -- |
+| 게시글 검색       | GET    | `/api/posts/search` | from, to, page, size | `[{ "postId": 2,"writerId": 2,"writerNickname": "테스트유저2","content": "테스트게시물2","createdAt": "2025-05-28 13:00:00"}, ...]` | 완료 |
 
 
-| 상태 코드 | 설명 |
-| --- | --- |
-| 404 | 사용자가 존재하지 않음 |
 
----

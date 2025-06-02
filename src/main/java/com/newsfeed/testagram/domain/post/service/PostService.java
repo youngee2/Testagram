@@ -3,18 +3,25 @@ package com.newsfeed.testagram.domain.post.service;
 import com.newsfeed.testagram.common.exception.member.MemberNotFoundException;
 import com.newsfeed.testagram.common.exception.post.PostNotFoundException;
 import com.newsfeed.testagram.domain.member.entity.Member;
+import com.newsfeed.testagram.domain.member.repository.MemberRepository;
 import com.newsfeed.testagram.domain.post.dto.request.CreatePostRequestDto;
 import com.newsfeed.testagram.domain.post.dto.request.PostUpdateRequestDto;
 import com.newsfeed.testagram.domain.post.dto.response.*;
 import com.newsfeed.testagram.domain.post.entity.Post;
 import com.newsfeed.testagram.domain.post.repository.PostRepository;
-import com.newsfeed.testagram.domain.post.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,10 +30,10 @@ public class PostService {
 
     //    private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     public CreatePostResponseDto save(CreatePostRequestDto requestDto) {
-        Member user = userRepository.findById(requestDto.getWriterId())
+        Member user = memberRepository.findById(requestDto.getWriterId())
                 .orElseThrow(MemberNotFoundException::new);// 이 부분 수정
         // Post 객체 생성
         Post post = Post.builder()
@@ -123,6 +130,23 @@ public class PostService {
             // 실패 용 응답 만들어서 반환
             return null;
         }
+    }
+
+    public Page<SearchPostResponseDto> searchPost(String from, String to, Pageable pageable) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime startDate = LocalDate.parse(from, formatter).atStartOfDay();
+        LocalDateTime endDate = LocalDate.parse(to, formatter).atTime(LocalTime.MAX);
+
+        Page<Post> postPage = postRepository.findAllByCreatedAtBetween(startDate, endDate, pageable);
+
+        List<SearchPostResponseDto> searchPostResponseDtoList = new ArrayList<>();
+        for (Post post : postPage.getContent()) {
+            Member writer = memberRepository.findByIdOrThrow(post.getId());
+            searchPostResponseDtoList.add(SearchPostResponseDto.toSearchPostResponseDto(post, writer));
+        }
+
+        return new PageImpl<>(searchPostResponseDtoList, pageable, postPage.getTotalElements());
     }
 }
 
