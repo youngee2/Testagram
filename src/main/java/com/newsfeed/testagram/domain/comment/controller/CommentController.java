@@ -1,5 +1,6 @@
 package com.newsfeed.testagram.domain.comment.controller;
 
+import com.newsfeed.testagram.common.util.JwtUtil;
 import com.newsfeed.testagram.domain.comment.dto.CommentRequest;
 import com.newsfeed.testagram.domain.comment.dto.CommentResponse;
 import com.newsfeed.testagram.domain.comment.service.CommentService;
@@ -18,9 +19,9 @@ import java.util.Map;
 public class CommentController {
 
     private final CommentService commentService;
-    //private final JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    /*
+
     //헤더에서 토큰 추출하기
     private Long extractMemberId(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -30,16 +31,16 @@ public class CommentController {
         String token = bearerToken.substring(JwtUtil.BEARER_PREFIX.length());
         return jwtUtil.getMemberIdFormToken(token);
     }
-    */
+
 
     // 댓글 작성
     @PostMapping("/comments")
     public ResponseEntity<Map<String, Long>> createComment(@RequestBody @Valid CommentRequest request,
                                                            HttpServletRequest httpRequest) {
 
-        Long writerId = 1L; // 임시 처리
+        //Long writerId = 1L; // 임시 처리
 
-        //Long writerId = extractMemberId(httpRequest);
+        Long writerId = extractMemberId(httpRequest);
         commentService.createComment(request, writerId);
         return ResponseEntity.ok().build();
     }
@@ -49,9 +50,9 @@ public class CommentController {
     public ResponseEntity<Map<String, Long>> updateComment(@PathVariable Long id,
                                                            @RequestBody @Valid CommentRequest request,
                                                            HttpServletRequest httpRequest) {
-        Long requesterId = 1L; // 임시 처리
+        //Long requesterId = 1L; // 임시 처리
 
-       // Long requesterId = extractMemberId(httpRequest);
+        Long requesterId = extractMemberId(httpRequest);
         commentService.updateComment(id, request, requesterId);
         return ResponseEntity.ok().build();
     }
@@ -61,9 +62,9 @@ public class CommentController {
     public ResponseEntity<Void> deleteComment(@PathVariable Long id,
                                               HttpServletRequest httpRequest) {
 
-        Long requesterId = 1L; // 임시 처리
+        //Long requesterId = 1L; // 임시 처리
 
-        //Long requesterId = extractMemberId(httpRequest);
+        Long requesterId = extractMemberId(httpRequest);
         commentService.deleteComment(id, requesterId);
 
         return ResponseEntity.ok().build();

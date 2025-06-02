@@ -2,6 +2,7 @@ package com.newsfeed.testagram.domain.post.service;
 
 import com.newsfeed.testagram.common.exception.member.MemberNotFoundException;
 import com.newsfeed.testagram.common.exception.post.PostNotFoundException;
+import com.newsfeed.testagram.domain.like.repository.PostLikeRepository;
 import com.newsfeed.testagram.domain.member.entity.Member;
 import com.newsfeed.testagram.domain.member.repository.MemberRepository;
 import com.newsfeed.testagram.domain.post.dto.request.CreatePostRequestDto;
@@ -31,6 +32,7 @@ public class PostService {
     //    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public CreatePostResponseDto save(CreatePostRequestDto requestDto) {
         Member user = memberRepository.findById(requestDto.getWriterId())
@@ -85,6 +87,7 @@ public class PostService {
                     "게시물을 조회하였습니다.",
                     nickName,
                     post.getContent(),
+                    postLikeRepository.countByPost(post),
                     post.getCreatedAt(),
                     post.getUpdatedAt()
             );
@@ -95,6 +98,7 @@ public class PostService {
                 "게시물을 찾을 수 없습니다.",
                 "",
                 "",
+                0,
                 null,
                 null
         );
