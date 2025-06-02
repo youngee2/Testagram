@@ -19,13 +19,13 @@ public class JwtUtil {
      * JWT 토큰의 접두사입니다.
      * 예시 값: "Bearer "
      */
+    public static final String BEARER_PREFIX = "Bearer ";
 
     /**
      * JWT 토큰의 유효 시간 (단위: 밀리초)
      * 현재 설정: 5분
      */
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 5분
-    public static final String BEARER_PREFIX = "Bearer: ";
 
     @Value("${jwt.secret.key}")
     private String secretKey;
