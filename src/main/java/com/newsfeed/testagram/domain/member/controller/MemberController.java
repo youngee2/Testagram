@@ -4,7 +4,10 @@ import com.newsfeed.testagram.domain.member.dto.request.MemberSignUpRequest;
 import com.newsfeed.testagram.domain.member.dto.request.MyProfileDeleteRequestDto;
 import com.newsfeed.testagram.domain.member.dto.request.MyProfileUpdateRequestDto;
 import com.newsfeed.testagram.domain.member.dto.request.PasswordRequestDto;
-import com.newsfeed.testagram.domain.member.dto.response.*;
+import com.newsfeed.testagram.domain.member.dto.response.MemberResponseDto;
+import com.newsfeed.testagram.domain.member.dto.response.MemberSignUpResponse;
+import com.newsfeed.testagram.domain.member.dto.response.MyProfileResponseDto;
+import com.newsfeed.testagram.domain.member.dto.response.MyProfileUpdateResponseDto;
 import com.newsfeed.testagram.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -67,27 +70,26 @@ public class MemberController {
 
     /**
      * 로그인한 사용자 정보를 기반으로 사용자 비밀번호를 수정합니다.
-     *
      * @param requestDto 사용자 비밀번호 수정 DTO
      * @return 비밀번호 수정 성공시 200 OK 응답
      */
     @PatchMapping("/me/password")
-    public ResponseEntity<SuccessResponse> editPassword(@RequestHeader("Authorization") String token,
-                                                        @RequestBody PasswordRequestDto requestDto){
+    public ResponseEntity<Void> editPassword(@RequestHeader("Authorization") String token,
+                                             @RequestBody PasswordRequestDto requestDto){
         memberService.editPasswordById(token,requestDto);
-        return ResponseEntity.ok(SuccessResponse.of("비밀번호가 정상적으로 수정되었습니다."));
+        return ResponseEntity.ok().build();
     }
 
 
     /**
      * 로그인한 사용자 정보를 기반으로 탈퇴합니다.
      * @param dto 사용자 탈퇴 DTO
-     * @return 비밀번호 탈퇴 성공시 200 OK 응답
+     * @return 비밀번호 수정 성공시 200 OK 응답
      */
     @DeleteMapping("/status")
-    public ResponseEntity<SuccessResponse> deleteProfile(@RequestHeader("Authorization") String token,
+    public ResponseEntity<Void> deleteProfile(@RequestHeader("Authorization") String token,
                                               @RequestBody MyProfileDeleteRequestDto dto){
         memberService.deleteProfileById(token,dto);
-        return ResponseEntity.ok(SuccessResponse.of("회원탈퇴가 정상적으로 처리되었습니다."));
+        return ResponseEntity.ok().build();
     }
 }

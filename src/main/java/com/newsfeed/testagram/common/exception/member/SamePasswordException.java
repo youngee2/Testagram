@@ -1,7 +1,5 @@
 package com.newsfeed.testagram.common.exception.member;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * 새 비밀번호가 기존 비밀번호와 동일할 때 발생하는 예외입니다.
  *
@@ -19,9 +17,5 @@ public class SamePasswordException extends RuntimeException {
 
     public SamePasswordException(String message) {
         super(message);
-    }
-
-    public HttpStatus getStatus() {
-        return HttpStatus.CONFLICT;
     }
 }

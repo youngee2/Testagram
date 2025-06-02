@@ -16,14 +16,14 @@ public class MyProfileResponseDto {
     private String email;
     private String nickname;
     private String image;
-    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
 
     public static MyProfileResponseDto of(Member member) {
         return new MyProfileResponseDto(
                 member.getId(),
                 member.getEmail(),
-                member.getNickname(),
                 member.getImage(),
+                member.getNickname(),
                 member.getCreatedAt()
         );
     }
