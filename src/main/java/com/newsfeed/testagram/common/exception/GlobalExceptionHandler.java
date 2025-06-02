@@ -1,8 +1,6 @@
 package com.newsfeed.testagram.common.exception;
 
 import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
-import com.newsfeed.testagram.common.exception.file.FileUploadException;
-import com.newsfeed.testagram.common.exception.file.UnsupportedImageFormatException;
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
 import com.newsfeed.testagram.common.exception.member.*;
@@ -21,6 +19,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(MemberNotFoundException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
     /**
      * 사용자가 잘못된 비밀번호를 입력할 경우 발생합니다.
      * 패스워드 불일치
@@ -29,6 +33,7 @@ public class GlobalExceptionHandler {
      * @param e IncorrectPasswordException 예외 객체
      * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
      */
+
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<ErrorResponse> handleIncorrectPasswordException(IncorrectPasswordException e) {
         return ResponseEntity
@@ -51,6 +56,27 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 
+
+    @ExceptionHandler(SamePasswordException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(SamePasswordException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(InvalidPasswordFormatException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+    @ExceptionHandler(PasswordNotMatchedException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(PasswordNotMatchedException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
     /**
      * 회원가입 시 이미 존재하는 이메일을 입력한 경우 발생합니다.
      * 이메일 중복
@@ -59,12 +85,14 @@ public class GlobalExceptionHandler {
      * @param e EmailAlreadyExistsException 예외 객체
      * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
      */
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
+
 
     /**
      * 입력한 이메일이 시스템에 존재하지 않을 경우 발생합니다.
@@ -74,12 +102,14 @@ public class GlobalExceptionHandler {
      * @param e EmailNotFoundException 예외 객체
      * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
      */
+
     @ExceptionHandler(EmailNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEmailNotFoundException(EmailNotFoundException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
+
 
     /**
      * 요청 데이터의 유효성 검사에 실패한 경우 발생합니다.
@@ -89,6 +119,7 @@ public class GlobalExceptionHandler {
      * @param e MethodArgumentNotValidException 예외 객체
      * @return 상태 코드와 에러 메시지가 담긴 ResponseEntity
      */
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
         FieldError fieldError = e.getBindingResult().getFieldError();
@@ -99,34 +130,6 @@ public class GlobalExceptionHandler {
     }
 
 
-    // 409: 같은 비밀번호
-    @ExceptionHandler(SamePasswordException.class)
-    public ResponseEntity<String> handleSamePassword(SamePasswordException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
-
-    // 400: 비밀번호 형식 오류
-    @ExceptionHandler(InvalidPasswordFormatException.class)
-    public ResponseEntity<String> handleInvalidPasswordFormat(InvalidPasswordFormatException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-    // 403: 이미 탈퇴한 사용자
-    @ExceptionHandler(AlreadyWithdrawnMemberException.class)
-    public ResponseEntity<String> handleAlreadyWithdrawn(AlreadyWithdrawnMemberException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-    }
-
-    @ExceptionHandler(UnsupportedImageFormatException.class)
-    public ResponseEntity<String> handleUnsupportedImageFormat(UnsupportedImageFormatException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-    // 500: 파일 업로드 실패
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<String> handleFileUpload(FileUploadException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePostNotFound(PostNotFoundException e){
@@ -142,5 +145,15 @@ public class GlobalExceptionHandler {
         error.put("error", "COMMENT_NOT_FOUND");
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+
+    // 기타 예외 처리 예시
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "INTERNAL_SERVER_ERROR");
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
