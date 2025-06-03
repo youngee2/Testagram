@@ -44,6 +44,8 @@ public class PostService {
         Post post = Post.builder()
                 .writer(user)
                 .content(requestDto.getContent())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
         //System.out.println("---Post저장---" );
 
@@ -152,8 +154,8 @@ public class PostService {
 
     }
 
+    // 검색 기능
     public Page<SearchPostResponseDto> searchPost(String from, String to, Pageable pageable) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime startDate = LocalDate.parse(from, formatter).atStartOfDay();
         LocalDateTime endDate = LocalDate.parse(to, formatter).atTime(LocalTime.MAX);
@@ -162,7 +164,7 @@ public class PostService {
 
         List<SearchPostResponseDto> searchPostResponseDtoList = new ArrayList<>();
         for (Post post : postPage.getContent()) {
-            Member writer = memberRepository.findByIdOrThrow(post.getId());
+            Member writer = post.getWriter();
             searchPostResponseDtoList.add(SearchPostResponseDto.toSearchPostResponseDto(post, writer));
         }
 

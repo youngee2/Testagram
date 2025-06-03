@@ -2,6 +2,7 @@ package com.newsfeed.testagram.common.exception;
 
 import com.newsfeed.testagram.common.exception.comment.CommentException;
 import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
+import com.newsfeed.testagram.common.exception.follow.FollowException;
 import com.newsfeed.testagram.common.exception.like.LikeException;
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
@@ -173,5 +174,12 @@ public class GlobalExceptionHandler {
         error.put("error", "INTERNAL_SERVER_ERROR");
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(FollowException.class)
+    public ResponseEntity<ErrorResponse> handleFollowException(FollowException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
     }
 }

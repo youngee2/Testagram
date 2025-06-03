@@ -9,13 +9,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "Post")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post extends BaseEntity {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +33,12 @@ public class Post extends BaseEntity {
 //    @Column(nullable = false,name = "writer_id")
 //    private Long writerId;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
     public void updatePost(String content){
         this.content = content;
+        this.updatedAt = LocalDateTime.now();
     }
 
 }
