@@ -1,5 +1,8 @@
 package com.newsfeed.testagram.domain.follow.repository;
 
+import com.newsfeed.testagram.common.exception.follow.NoFollowersException;
+import com.newsfeed.testagram.common.exception.follow.NoFollowingMembersException;
+import com.newsfeed.testagram.common.exception.follow.FollowNotFoundException;
 import com.newsfeed.testagram.domain.follow.entity.Follow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
@@ -17,17 +20,18 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     default List<Follow> findFollowByFollowerIdOrElseThrow(Long loginMemberId) {
         List<Follow> followList = findFollowByFollowerId(loginMemberId);
         if (followList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로우한 멤버가 없습니다. id = " + loginMemberId);
+            throw new NoFollowingMembersException();
         }
         return followList;
     }
+
 
     List<Follow> findFollowByFollowingId(Long loginMemberId);
 
     default List<Follow> findFollowByFollowingIdOrElseThrow(Long loginMemberId) {
         List<Follow> followList = findFollowByFollowingId(loginMemberId);
         if (followList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로잉한 멤버가 없습니다. id = " + loginMemberId);
+            throw new NoFollowersException();
         }
         return followList;
     }
@@ -36,7 +40,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     default Follow findFollowByFollowerIdAndFollowingIdOrElseThrow(Long followerId, Long followingId) {
         return findFollowByFollowerIdAndFollowingId(followerId, followingId)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "팔로우 관계가 존재하지 않습니다. followerId=" + followerId + ", followingId=" + followingId));
+                .orElseThrow(FollowNotFoundException::new);
     }
 }

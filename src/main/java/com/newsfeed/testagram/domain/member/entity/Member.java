@@ -3,11 +3,14 @@ package com.newsfeed.testagram.domain.member.entity;
 import com.newsfeed.testagram.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -15,6 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name="member")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +28,9 @@ public class Member extends BaseEntity {
     private String image;
     private String password;
     private String nickname;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false)
     private Boolean active=true;
@@ -41,6 +48,7 @@ public class Member extends BaseEntity {
 
     public void updatePassword(String password) {
         this.password = password;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void deleteProfile() {
