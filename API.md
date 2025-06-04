@@ -5,15 +5,17 @@
 
 ###  요청 Request
 
-| 키   | 데이터 타입 | 설명  |
-|-----|--------|-----|
-| content | String | 내용  |
+| 키        | 데이터 타입 | 설명  |
+|----------|--------|-----|
+| writerid | long   | 내용  |
+| content  | String | 내용  |
 
   
 
 ### JSON 예시
 ``` Json  
 {
+    "writerId" : 1,
     "content" : "내용"
  }   
 ```  
@@ -94,23 +96,47 @@
 ```JSON
 {
   "status": 200,
-  "message": "조회를 완료했습니다.",
-  "posts": [
-    {
-      "postId" : 1213,
-      "writerId" : 123123,
-      "nickName": "ggg",
-      "content": "dfdf",
-      "createdAt": "2025-05-16",
-      "updatedAt": "2025-05-16"
+  "message": "전체 조회가 완료 되었습니다.",
+  "posts": {
+    "content": [
+      {
+        "postId": 2,
+        "writerId": 1,
+        "nickName": "테스트유저",
+        "content": "내용"
+      },
+      {
+        "postId": 1,
+        "writerId": 1,
+        "nickName": "테스트유저",
+        "content": "내용"
+      }
+    ],
+    "pageable": {
+      "pageNumber": 0,
+      "pageSize": 10,
+      "sort": {
+        "empty": false,
+        "unsorted": false,
+        "sorted": true
+      },
+      "offset": 0,
+      "unpaged": false,
+      "paged": true
     },
-    ...
-  ],
-  "pageInfo": {
-    "page": 1,
-    "size": 3,
-    "totalPage": 2,
-    "totalElement": 5
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 2,
+    "first": true,
+    "size": 10,
+    "number": 0,
+    "sort": {
+      "empty": false,
+      "unsorted": false,
+      "sorted": true
+    },
+    "numberOfElements": 2,
+    "empty": false
   }
 }
 ```
@@ -157,8 +183,7 @@ Param
 | 키       | 데이터 타입        | 설명   |
 |---------|---------------|------|
 | status  | int           | 상태코드 |
-| message | String        | 메세지  |
-| nickName | String        | 닉네임  |  
+| message | String        | 메세지  | 
 | content | String        | 내용   |  
 | createdAt | Localdatetime | 생성일시 |  
 | updatedAt | Localdatetime | 수정일시 |  
