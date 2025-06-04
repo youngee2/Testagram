@@ -44,8 +44,6 @@ public class PostService {
         Post post = Post.builder()
                 .writer(user)
                 .content(requestDto.getContent())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .build();
         //System.out.println("---Post저장---" );
 
@@ -116,8 +114,7 @@ public class PostService {
     public PostUpdateResponseDto updatePostService(String token, Long postId, PostUpdateRequestDto requestDto) {
 
         if(!jwtUtil.validateToken((token))){
-            Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
-                    .orElseThrow(MemberNotMatchedException::new);
+            throw new MemberNotMatchedException();
         }
 
         // 데이터
@@ -136,22 +133,19 @@ public class PostService {
     public PostDeleteResponseDto deletePostService(String token, Long postId) {
 
         if(!jwtUtil.validateToken((token))){
-            Member member = memberRepository.findById(jwtUtil.getMemberIdFromToken(token))
-                    .orElseThrow(MemberNotMatchedException::new);
+            throw new MemberNotMatchedException();
         }
         // 조회
 //        Optional<Post> PostOptional = postRepository.findById(postId);
         Long memberId = jwtUtil.getMemberIdFromToken(token);
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(PostNotFoundException::new);
+        memberRepository.findByIdOrThrow(memberId);
         // 게시물 조회
         Post post = postRepository.findById(postId)
                         .orElseThrow(PostNotFoundException::new);
 
         postRepository.delete(post);
 
-            return new PostDeleteResponseDto(200, "deleted");
-
+        return new PostDeleteResponseDto(200, "deleted");
     }
 
     // 검색 기능

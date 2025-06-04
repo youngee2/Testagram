@@ -4,7 +4,6 @@ import com.newsfeed.testagram.common.exception.member.*;
 import com.newsfeed.testagram.common.security.PasswordEncoder;
 import com.newsfeed.testagram.common.util.JwtUtil;
 import com.newsfeed.testagram.common.valid.PasswordValid;
-import com.newsfeed.testagram.domain.comment.entity.Comment;
 import com.newsfeed.testagram.domain.member.dto.request.MyProfileDeleteRequestDto;
 import com.newsfeed.testagram.domain.member.dto.request.MyProfileUpdateRequestDto;
 import com.newsfeed.testagram.domain.member.dto.request.PasswordRequestDto;
@@ -18,8 +17,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -31,14 +28,7 @@ public class MemberService {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
-        Member member = Member.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .nickname(nickname)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .active(true)
-                .build();
+        Member member = new Member(email,password,nickname);
         memberRepository.save(member);
         return MemberSignUpResponse.toDto("회원가입이 완료되었습니다.", member);
     }
