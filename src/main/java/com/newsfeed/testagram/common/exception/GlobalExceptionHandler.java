@@ -2,7 +2,7 @@ package com.newsfeed.testagram.common.exception;
 
 import com.newsfeed.testagram.common.exception.comment.CommentException;
 import com.newsfeed.testagram.common.exception.dto.ErrorResponse;
-import com.newsfeed.testagram.common.exception.follow.FollowException;
+import com.newsfeed.testagram.common.exception.follow.*;
 import com.newsfeed.testagram.common.exception.like.LikeException;
 import com.newsfeed.testagram.common.exception.login.IncorrectPasswordException;
 import com.newsfeed.testagram.common.exception.login.LoginFailedException;
@@ -178,6 +178,41 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FollowException.class)
     public ResponseEntity<ErrorResponse> handleFollowException(FollowException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(FollowNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleFollowNotFoundException(FollowNotFoundException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(NoFollowersException.class)
+    public ResponseEntity<ErrorResponse> handleNoFollowersException(NoFollowersException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(NoFollowingMembersException.class)
+    public ResponseEntity<ErrorResponse> handleNoFollowersException(NoFollowingMembersException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(SelfFollowNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleSelfFollowNotAllowedException(SelfFollowNotAllowedException e) {
+        return ResponseEntity
+                .status(e.getStatus().value())
+                .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(AlreadyFollowingException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyFollowingException(AlreadyFollowingException e) {
         return ResponseEntity
                 .status(e.getStatus().value())
                 .body(new ErrorResponse(e.getStatus().value(), e.getMessage()));

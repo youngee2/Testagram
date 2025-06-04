@@ -1,5 +1,7 @@
 package com.newsfeed.testagram.domain.follow.service;
 
+import com.newsfeed.testagram.common.exception.follow.AlreadyFollowingException;
+import com.newsfeed.testagram.common.exception.follow.SelfFollowNotAllowedException;
 import com.newsfeed.testagram.domain.follow.dto.follow.FollowResponseDto;
 import com.newsfeed.testagram.domain.follow.dto.follow.FollowerMemberResponseDto;
 import com.newsfeed.testagram.domain.follow.dto.follow.FollowingMemberPostResponseDto;
@@ -38,11 +40,11 @@ public class FollowService {
         Member following = memberRepository.findByIdOrThrow(targetMemberId);
 
         if (loginMemberId.equals(targetMemberId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "자기 자신을 팔로우 할 수 없습니다.");
+            throw new SelfFollowNotAllowedException("자기 자신을 팔로우 할 수 없습니다.", HttpStatus.NOT_FOUND);
         }
 
         if (followRepository.existsByFollowerIdAndFollowingId(loginMemberId, targetMemberId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 팔로우한 멤버 입니다.");
+            throw new AlreadyFollowingException("이미 팔로우한 멤버 입니다.", HttpStatus.BAD_REQUEST);
         }
 
         Follow follow = new Follow(loginMemberId, targetMemberId, LocalDateTime.now());

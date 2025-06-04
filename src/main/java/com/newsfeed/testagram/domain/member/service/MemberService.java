@@ -28,7 +28,7 @@ public class MemberService {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
-        Member member = new Member(email,password,nickname);
+        Member member = new Member(email,passwordEncoder.encode(password),nickname);
         memberRepository.save(member);
         return MemberSignUpResponse.toDto("회원가입이 완료되었습니다.", member);
     }
